@@ -64,15 +64,10 @@
       display: none;
       background: #000;
     }
-    .btn {
-      background-color: var(--accent);
-      color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
+    #status {
+      margin-top: 1rem;
+      font-weight: 500;
+      color: #58a6ff;
     }
   </style>
 </head>
@@ -102,15 +97,35 @@
     videoInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) {
-        processVideo(file);
+        startTranscode(file);
       }
     });
 
-    function processVideo(file) {
-      status.textContent = `Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
-      const fileURL = URL.createObjectURL(file);
-      previewPlayer.src = fileURL;
-      previewPlayer.style.display = 'block';
+    function startTranscode(file) {
+      status.textContent = `Preparing ${file.name}...`;
+
+      // Initialize the Web Worker
+      const worker = new Worker('worker.js', { type: 'module' });
+
+      worker.postMessage({ type: 'TRANSCODE', file });
+
+      worker.onmessage = (e) => {
+        const { status: workerStatus, message, videoUrl } = e.data;
+        
+        if (workerStatus === 'LOADING' || workerStatus === 'PROCESSING' || workerStatus === 'LOG') {
+          status.textContent = message;
+        } else if (workerStatus === 'DONE') {
+          status.textContent = message;
+          previewPlayer.src = videoUrl;
+          previewPlayer.style.display = 'block';
+          worker.terminate();
+        }
+      };
+
+      worker.onerror = (err) => {
+        console.error(err);
+        status.textContent = 'Transcoding error. Check console.';
+      };
     }
   </script>
 </body>
