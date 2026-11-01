@@ -1,31 +1,13 @@
 # Fig 60
+**Fig 60** is a privacy-centric, zero-server micro-video platform built on a simple premise: **Technology and AI are tools for human intent, not replacements for human perspective.** 
 
-> *We stay at 60 seconds to practice pure intent.*
+Rejecting realistic fake automated media, Fig 60 puts the creator fully in the driver's seat using strict boundaries and absolute local data privacy.
 
-Fig 60 is a free, open-source, human-only micro-video canvas built on zero-surveillance, grassroots infrastructure. 
+## Core Philosophy
+* **Human-First Intent:** Technology should serve your creative vision, not churn out automated noise.
+* **100% Local & Private:** Zero servers, zero telemetry. Your media never leaves your device.
+* **Intentional Constraints:** Enforced 60-second duration and 720p resolution limits keep work focused, lightweight, and manageable.
 
----
-
-## 🌿 Core Manifesto
-
-1. **Constraint over Engagement:** Strict 60.00-second maximum duration. No endless feeds, no algorithmic traps, no slot-machine UX.
-2. **Human Mandate:** Zero synthetic media or AI-generated video. A pure digital sanctuary for genuine human art, expression, and thought.
-3. **Grassroots Architecture:** Zero-server cost foundation using in-browser WebAssembly (`ffmpeg.wasm`) and P2P distribution.
-4. **Mutual Aid:** Non-commercial, open-source under GNU AGPL-3.0.
-
----
-
-## 🚀 Technical Roadmap
-
-* **Phase 1 (Active):** Client-side `ffmpeg.wasm` video processing (720p HLS chunking).
-* **Phase 2:** Peer-assisted segment delivery (WebRTC / WebTorrent).
-* **Phase 3:** Minimalist frontend player & sanctuary verification.
-* **Phase 4:** Decentralized directory index & federation.
-
----
-
-## 📜 Governance & License
-
-* **Code License:** [GNU AGPLv3](LICENSE)
-* **Brand Policy:** See [TRADEMARK.md](TRADEMARK.md) for brand usage guidelines.
-* **Technical Spec:** See [SPEC.md](SPEC.md) for prior art documentation.
+## Architecture
+* Built with `ffmpeg.wasm` running entirely inside multi-threaded Web Workers.
+* Browser-only execution ensuring complete user data sovereignty.
