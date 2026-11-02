@@ -1,24 +1,26 @@
 # Fig 60
-**Fig 60** is a privacy-centric, zero-server micro-video platform built on a simple premise: **Technology and AI are tools for human intent, not replacements for human perspective.** 
 
-Rejecting realistic fake automated media, Fig 60 puts the creator fully in the driver's seat using strict boundaries and absolute local data privacy.
+**Fig 60** is a privacy-focused, serverless 60-second micro-video editor built from the ground up for absolute accessibility and human-centric design.
 
-## Core Philosophy
-* **Human-First Intent:** Technology should serve your creative vision, not churn out automated noise.
-* **100% Local & Private:** Zero servers, zero telemetry. Your media never leaves your device.
-* **Intentional Constraints:** Enforced 60-second duration and 720p resolution limits keep work focused, lightweight, and manageable.
+🌐 **Try the Live App:** [https://ishii-gothi-lead.github.io/fig60/](https://ishii-gothi-lead.github.io/fig60/)
 
-## Architecture
-* Built with `ffmpeg.wasm` running entirely inside multi-threaded Web Workers.
-* Browser-only execution ensuring complete user data sovereignty.
 ---
 
-## ⚡ Powered by MAE-B Engine
+## Core Philosophy
 
-**Fig 60** is powered by **MAE-B** (*Motor-Accessible Editing — Browser*), an open interaction standard designed for single-tap, gesture-free media creation.
+* **Anti-Synthetic & Human-Centric:** Built to empower creators directly on their own devices without aggressive platform monetization, subscriptions, or dark patterns.
+* **100% Local & Private:** All media files are loaded and processed entirely client-side using native browser capabilities via local Blob URLs. No data ever touches a remote server.
+* **MAE-B Standard (Motor-Accessible Editing):** Engineered for motor accessibility, featuring strictly enforced **56px+ touch targets** and gesture-free single-tap navigation to eliminate the friction of complex multi-finger sliders or fine-motor dragging.
 
-### MAE-B Core Design Principles
-* **Zero Complex Gestures:** Eliminates timeline dragging, pinching, and double-tapping in favor of large, single-tap actions.
-* **Discrete Nudge Controls:** Fine-tune start and end points using accessible `+0.5s` and `-0.5s` adjustment buttons.
-* **Massive Touch Targets:** Compliant with WCAG 2.2 touch-target rules (56px+ targets) to support motor accessibility and switch-control devices.
-* **100% In-Browser Execution:** Operates entirely client-side using WebAssembly (`ffmpeg.wasm`) and Web Workers—no servers, zero telemetry.
+---
+
+## Tech Stack
+
+* **Vanilla Web Technologies:** Built with clean, lightweight HTML5, CSS3, and standard modern JavaScript. 
+* **Zero Bloat:** No heavy build tools, no complex frameworks, and no Rust compilation required—keeping it fast, transparent, and instantly maintainable across desktop and mobile browsers.
+
+---
+
+## License
+
+Open-source and designed to keep video editing simple, accessible, and private.
