@@ -3,16 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fig 60 - MAE-B Prototype</title>
+  <title>Fig 60 - MAE-B Prototype (Neon Cobalt)</title>
   <style>
     :root {
-      --bg-color: #121212;
-      --card-bg: #1e1e1e;
-      --accent-color: #00e676;
-      --accent-active: #00b359;
-      --text-main: #ffffff;
-      --text-sub: #b0b0b0;
-      --min-touch-size: 56px;
+      /* THEME: NEON COBALT & BLUE */
+      --bg-color: #030509; /* Deepest black-blue */
+      --card-bg: #090e18; /* Rich background depth */
+      --card-border: rgba(59, 130, 246, 0.12); /* Subtle blue glow */
+      --accent-color: #3b82f6; /* Bold Neon Blue */
+      --accent-hover: #2563eb;
+      --accent-active: #1d4ed8;
+      --text-main: #f8fafc; /* Crisp, clean white */
+      --text-sub: #a1a1aa; /* Soft gray for captions */
+      --min-touch-size: 56px; /* Fundamental MAE-B standard */
     }
 
     * {
@@ -27,7 +30,7 @@
       color: var(--text-main);
       display: flex;
       justify-content: center;
-      padding: 12px;
+      padding: 16px 12px;
       min-height: 100vh;
     }
 
@@ -45,31 +48,40 @@
     }
 
     header h1 {
-      font-size: 1.5rem;
-      letter-spacing: 0.5px;
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: -0.75px;
+      background: linear-gradient(135deg, #f8fafc 10%, #bfdbfe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     header p {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-sub);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .video-card {
       background: var(--card-bg);
-      border-radius: 12px;
-      padding: 12px;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 12px;
+      box-shadow: 0 10px 35px -8px rgba(37, 99, 235, 0.25);
     }
 
     .video-preview {
       width: 100%;
       aspect-ratio: 9 / 16;
       max-height: 320px;
-      background-color: #000;
-      border-radius: 8px;
+      background-color: #000205; /* Blackest blue */
+      border-radius: 14px;
       object-fit: cover;
     }
 
@@ -77,61 +89,83 @@
       width: 100%;
       min-height: var(--min-touch-size);
       background-color: var(--accent-color);
-      color: #000;
-      font-size: 1.2rem;
-      font-weight: bold;
+      color: #ffffff;
+      font-size: 1.15rem;
+      font-weight: 700;
       border: none;
-      border-radius: 8px;
+      border-radius: 14px;
       cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .primary-btn:active {
+      background-color: var(--accent-active);
+      transform: translateY(1px);
     }
 
     .control-card {
       background: var(--card-bg);
-      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
       padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 12px;
+      box-shadow: 0 10px 35px -8px rgba(37, 99, 235, 0.25);
     }
 
     .control-card h2 {
-      font-size: 1.1rem;
+      font-size: 1rem;
+      font-weight: 600;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      color: #bfdbfe;
     }
 
     .time-badge {
-      font-size: 1.1rem;
+      font-size: 1.25rem;
       font-family: monospace;
+      font-weight: bold;
       color: var(--accent-color);
-      background: #000;
-      padding: 4px 8px;
-      border-radius: 4px;
+      background: #000205;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      padding: 6px 14px;
+      border-radius: 10px;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
     }
 
     .btn-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
+      gap: 10px;
     }
 
     .action-btn {
       min-height: var(--min-touch-size);
-      background-color: #2a2a2a;
+      background-color: #111827;
       color: var(--text-main);
-      border: 2px solid #444;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      font-weight: bold;
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 600;
       cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:active {
+      background-color: #1f2937;
     }
 
     .mark-btn {
       grid-column: span 2;
-      background-color: #2a3a2a;
-      border-color: var(--accent-color);
-      color: var(--accent-color);
+      background-color: rgba(59, 130, 246, 0.15);
+      border-color: #1d4ed8;
+      color: #bfdbfe;
+    }
+
+    .mark-btn:active {
+      background-color: rgba(59, 130, 246, 0.3);
     }
 
     .toggle-group {
@@ -142,31 +176,41 @@
 
     .toggle-btn {
       min-height: var(--min-touch-size);
-      background-color: #2a2a2a;
-      border: 2px solid #444;
-      border-radius: 8px;
+      background-color: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 14px;
       color: var(--text-main);
       font-size: 1rem;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
 
     .toggle-btn.active {
       border-color: var(--accent-color);
-      background-color: #1a2e22;
+      background-color: rgba(59, 130, 246, 0.25);
+      color: #bfdbfe;
+      box-shadow: 0 4px 10px -2px rgba(37, 99, 235, 0.3);
     }
 
     .export-btn {
       width: 100%;
-      min-height: 64px;
-      background-color: var(--accent-color);
-      color: #000;
-      font-size: 1.25rem;
-      font-weight: bold;
+      min-height: 68px;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: #ffffff;
+      font-size: 1.35rem;
+      font-weight: 700;
       border: none;
-      border-radius: 12px;
+      border-radius: 16px;
       cursor: pointer;
       margin-top: 8px;
+      box-shadow: 0 6px 20px 0 rgba(37, 99, 235, 0.45);
+      transition: transform 0.1s ease, box-shadow 0.2s ease;
+    }
+
+    .export-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 4px 10px 0 rgba(37, 99, 235, 0.3);
     }
   </style>
 </head>
@@ -175,19 +219,16 @@
   <div class="container">
     <header>
       <h1>Fig 60</h1>
-      <p>Powered by MAE-B (Motor-Accessible Editing)</p>
+      <p>MAE-B • Micro Video Engine</p>
     </header>
 
     <div class="video-card">
-      <!-- Hidden file input -->
       <input type="file" id="videoUpload" accept="video/mp4,video/webm" style="display: none;" onchange="loadVideo(event)">
       
-      <!-- Video Preview Player (Hidden until video is loaded) -->
       <video id="videoPreview" class="video-preview" preload="metadata" controls style="display: none;"></video>
       
-      <!-- Placeholder Box -->
-      <div id="uploadPlaceholder" class="video-preview" style="display: flex; align-items: center; justify-content: center; color: var(--text-sub); border: 2px dashed #333; cursor: pointer;" onclick="document.getElementById('videoUpload').click()">
-        <span>Click to Load Video (Max 60s)</span>
+      <div id="uploadPlaceholder" class="video-preview" style="display: flex; align-items: center; justify-content: center; text-align: center; color: var(--text-sub); border: 2px dashed rgba(59, 130, 246, 0.2); cursor: pointer; padding: 20px; line-height: 1.4;" onclick="document.getElementById('videoUpload').click()">
+        <span>Click to Load Local Video<br><span style="font-size: 0.8rem; font-weight: bold; color:var(--accent-color);">MAE-B Compliance Active (56px)</span></span>
       </div>
 
       <button class="primary-btn" onclick="document.getElementById('videoUpload').click()">📂 Select Local Video</button>
