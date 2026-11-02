@@ -70,12 +70,7 @@
       max-height: 320px;
       background-color: #000;
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-sub);
-      font-size: 1rem;
-      border: 2px dashed #333;
+      object-fit: cover;
     }
 
     .primary-btn {
@@ -184,10 +179,18 @@
     </header>
 
     <div class="video-card">
-      <div class="video-preview">
-        <span>MAE-B Video Preview</span>
+      <!-- Hidden file input -->
+      <input type="file" id="videoUpload" accept="video/mp4,video/webm" style="display: none;" onchange="loadVideo(event)">
+      
+      <!-- Video Preview Player (Hidden until video is loaded) -->
+      <video id="videoPreview" class="video-preview" preload="metadata" controls style="display: none;"></video>
+      
+      <!-- Placeholder Box -->
+      <div id="uploadPlaceholder" class="video-preview" style="display: flex; align-items: center; justify-content: center; color: var(--text-sub); border: 2px dashed #333; cursor: pointer;" onclick="document.getElementById('videoUpload').click()">
+        <span>Click to Load Video (Max 60s)</span>
       </div>
-      <button class="primary-btn">▶ Play / Pause</button>
+
+      <button class="primary-btn" onclick="document.getElementById('videoUpload').click()">📂 Select Local Video</button>
     </div>
 
     <div class="control-card">
@@ -222,12 +225,31 @@
     let isMuted = false;
     let isVertical = true;
 
+    function loadVideo(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const videoElement = document.getElementById('videoPreview');
+      const placeholder = document.getElementById('uploadPlaceholder');
+
+      const fileURL = URL.createObjectURL(file);
+      videoElement.src = fileURL;
+      videoElement.style.display = 'block';
+      placeholder.style.display = 'none';
+
+      videoElement.onloadedmetadata = function() {
+        endVal = Math.min(60.0, videoElement.duration);
+        document.getElementById('endTime').textContent = formatTime(endVal);
+      };
+    }
+
     function setMarker(type) {
+      const video = document.getElementById('videoPreview');
       if (type === 'start') {
-        startVal += 1.0;
+        startVal = video.currentTime;
         document.getElementById('startTime').textContent = formatTime(startVal);
       } else {
-        endVal -= 1.0;
+        endVal = video.currentTime;
         document.getElementById('endTime').textContent = formatTime(endVal);
       }
     }
@@ -244,6 +266,8 @@
 
     function toggleMute() {
       isMuted = !isMuted;
+      const video = document.getElementById('videoPreview');
+      video.muted = isMuted;
       const btn = document.getElementById('muteBtn');
       btn.textContent = isMuted ? "🔇 Muted" : "🔊 Sound On";
       btn.classList.toggle('active', isMuted);
@@ -262,7 +286,7 @@
     }
 
     function processVideo() {
-      alert(`MAE-B Engine: Processing local micro-video from ${formatTime(startVal)} to ${formatTime(endVal)}.`);
+      alert(`MAE-B Engine: Processing local micro-video from ${formatTime(startVal)} to ${formatTime(endVal)} entirely on-device.`);
     }
   </script>
 </body>
