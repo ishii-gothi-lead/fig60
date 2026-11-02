@@ -1,334 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fig 60 - MAE-B Prototype (Neon Cobalt)</title>
-  <style>
-    :root {
-      /* THEME: NEON COBALT & BLUE */
-      --bg-color: #030509; /* Deepest black-blue */
-      --card-bg: #090e18; /* Rich background depth */
-      --card-border: rgba(59, 130, 246, 0.12); /* Subtle blue glow */
-      --accent-color: #3b82f6; /* Bold Neon Blue */
-      --accent-hover: #2563eb;
-      --accent-active: #1d4ed8;
-      --text-main: #f8fafc; /* Crisp, clean white */
-      --text-sub: #a1a1aa; /* Soft gray for captions */
-      --min-touch-size: 56px; /* Fundamental MAE-B standard */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fig 60 - MAE-B Micro Video Engine</title>
+    <style>
+        /* Base Reset & Theme */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
+        body {
+            background-color: #0d0f14;
+            color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      display: flex;
-      justify-content: center;
-      padding: 16px 12px;
-      min-height: 100vh;
-    }
+        /* Mobile First Layout (Default Stack) */
+        .workbench {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
 
-    .container {
-      width: 100%;
-      max-width: 480px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+        /* Header Section */
+        header {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
 
-    header {
-      text-align: center;
-      padding: 8px 0;
-    }
+        header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+        }
 
-    header h1 {
-      font-size: 1.85rem;
-      font-weight: 800;
-      letter-spacing: -0.75px;
-      background: linear-gradient(135deg, #f8fafc 10%, #bfdbfe 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+        header p {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
 
-    header p {
-      font-size: 0.8rem;
-      color: var(--text-sub);
-      margin-top: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+        /* Video Workspace / Dropzone */
+        .video-container {
+            background: #161a23;
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 240px;
+            gap: 1rem;
+        }
 
-    .video-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 10px 35px -8px rgba(37, 99, 235, 0.25);
-    }
+        .video-container p {
+            font-size: 0.95rem;
+            color: #d1d5db;
+        }
 
-    .video-preview {
-      width: 100%;
-      aspect-ratio: 9 / 16;
-      max-height: 320px;
-      background-color: #000205; /* Blackest blue */
-      border-radius: 14px;
-      object-fit: cover;
-    }
+        .compliance-badge {
+            font-size: 0.75rem;
+            color: #60a5fa;
+            background: rgba(96, 165, 250, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+        }
 
-    .primary-btn {
-      width: 100%;
-      min-height: var(--min-touch-size);
-      background-color: var(--accent-color);
-      color: #ffffff;
-      font-size: 1.15rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.1s ease;
-    }
+        /* MAE-B Baseline Compliant Targets (56px+ height/padding) */
+        .mae-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 56px;
+            padding: 0 1.5rem;
+            background-color: #2563eb;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            text-decoration: none;
+        }
 
-    .primary-btn:active {
-      background-color: var(--accent-active);
-      transform: translateY(1px);
-    }
+        .mae-button:hover {
+            background-color: #1d4ed8;
+        }
 
-    .control-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-shadow: 0 10px 35px -8px rgba(37, 99, 235, 0.25);
-    }
+        /* Controls Panel */
+        .controls-container {
+            background: #161a23;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
 
-    .control-card h2 {
-      font-size: 1rem;
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: #bfdbfe;
-    }
+        /* Desktop Polish (Side-by-Side Grid for Wider Screens) */
+        @media (min-width: 900px) {
+            .workbench {
+                max-width: 1000px;
+                display: grid;
+                grid-template-columns: 1.2fr 1fr;
+                gap: 2rem;
+                align-items: center;
+                background: rgba(255, 255, 255, 0.02);
+                border: 1px solid rgba(255, 255, 255, 0.06);
+                border-radius: 20px;
+                padding: 2.5rem;
+            }
 
-    .time-badge {
-      font-size: 1.25rem;
-      font-family: monospace;
-      font-weight: bold;
-      color: var(--accent-color);
-      background: #000205;
-      border: 1px solid rgba(59, 130, 246, 0.2);
-      padding: 6px 14px;
-      border-radius: 10px;
-      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
-    }
+            header {
+                grid-column: 1 / -1;
+                margin-bottom: 1rem;
+            }
 
-    .btn-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-
-    .action-btn {
-      min-height: var(--min-touch-size);
-      background-color: #111827;
-      color: var(--text-main);
-      border: 1px solid #1f2937;
-      border-radius: 14px;
-      font-size: 1.05rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .action-btn:active {
-      background-color: #1f2937;
-    }
-
-    .mark-btn {
-      grid-column: span 2;
-      background-color: rgba(59, 130, 246, 0.15);
-      border-color: #1d4ed8;
-      color: #bfdbfe;
-    }
-
-    .mark-btn:active {
-      background-color: rgba(59, 130, 246, 0.3);
-    }
-
-    .toggle-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .toggle-btn {
-      min-height: var(--min-touch-size);
-      background-color: #111827;
-      border: 1px solid #1f2937;
-      border-radius: 14px;
-      color: var(--text-main);
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .toggle-btn.active {
-      border-color: var(--accent-color);
-      background-color: rgba(59, 130, 246, 0.25);
-      color: #bfdbfe;
-      box-shadow: 0 4px 10px -2px rgba(37, 99, 235, 0.3);
-    }
-
-    .export-btn {
-      width: 100%;
-      min-height: 68px;
-      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-      color: #ffffff;
-      font-size: 1.35rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 16px;
-      cursor: pointer;
-      margin-top: 8px;
-      box-shadow: 0 6px 20px 0 rgba(37, 99, 235, 0.45);
-      transition: transform 0.1s ease, box-shadow 0.2s ease;
-    }
-
-    .export-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 4px 10px 0 rgba(37, 99, 235, 0.3);
-    }
-  </style>
+            .video-container {
+                min-height: 320px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <div class="container">
-    <header>
-      <h1>Fig 60</h1>
-      <p>MAE-B • Micro Video Engine</p>
-    </header>
+    <main class="workbench">
+        <header>
+            <h1>Fig 60</h1>
+            <p>MAE-B • Micro Video Engine</p>
+        </header>
 
-    <div class="video-card">
-      <input type="file" id="videoUpload" accept="video/mp4,video/webm" style="display: none;" onchange="loadVideo(event)">
-      
-      <video id="videoPreview" class="video-preview" preload="metadata" controls style="display: none;"></video>
-      
-      <div id="uploadPlaceholder" class="video-preview" style="display: flex; align-items: center; justify-content: center; text-align: center; color: var(--text-sub); border: 2px dashed rgba(59, 130, 246, 0.2); cursor: pointer; padding: 20px; line-height: 1.4;" onclick="document.getElementById('videoUpload').click()">
-        <span>Click to Load Local Video<br><span style="font-size: 0.8rem; font-weight: bold; color:var(--accent-color);">MAE-B Compliance Active (56px)</span></span>
-      </div>
+        <!-- Video Preview / Loading Dropzone -->
+        <div class="video-container">
+            <p>Drag & drop local video here, or select below</p>
+            <span class="compliance-badge">MAE-B Baseline Active (56px)</span>
+            <button class="mae-button" onclick="document.getElementById('fileInput').click()">Select Local Video</button>
+            <input type="file" id="fileInput" accept="video/*" style="display: none;">
+        </div>
 
-      <button class="primary-btn" onclick="document.getElementById('videoUpload').click()">📂 Select Local Video</button>
-    </div>
+        <!-- Trimming & Editing Controls -->
+        <div class="controls-container">
+            <div style="font-size: 0.9rem; color: #9ca3af; margin-bottom: 0.5rem;">Edit Workspace</div>
+            <button class="mae-button" style="background-color: #374151;">Trim 60s Clip</button>
+            <button class="mae-button" style="background-color: #059669;">Save Local Copy</button>
+        </div>
+    </main>
 
-    <div class="control-card">
-      <h2>Start Time <span class="time-badge" id="startTime">00:00.0</span></h2>
-      <div class="btn-row">
-        <button class="action-btn mark-btn" onclick="setMarker('start')">📍 Mark Start</button>
-        <button class="action-btn" onclick="adjustTime('start', -0.5)">-0.5s</button>
-        <button class="action-btn" onclick="adjustTime('start', 0.5)">+0.5s</button>
-      </div>
-    </div>
-
-    <div class="control-card">
-      <h2>End Time <span class="time-badge" id="endTime">01:00.0</span></h2>
-      <div class="btn-row">
-        <button class="action-btn mark-btn" onclick="setMarker('end')">🏁 Mark End</button>
-        <button class="action-btn" onclick="adjustTime('end', -0.5)">-0.5s</button>
-        <button class="action-btn" onclick="adjustTime('end', 0.5)">+0.5s</button>
-      </div>
-    </div>
-
-    <div class="toggle-group">
-      <button class="toggle-btn" id="muteBtn" onclick="toggleMute()">🔊 Sound On</button>
-      <button class="toggle-btn active" id="ratioBtn" onclick="toggleRatio()">📱 9:16 Crop</button>
-    </div>
-
-    <button class="export-btn" onclick="processVideo()">⚡ Process Micro-Video</button>
-  </div>
-
-  <script>
-    let startVal = 0.0;
-    let endVal = 60.0;
-    let isMuted = false;
-    let isVertical = true;
-
-    function loadVideo(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const videoElement = document.getElementById('videoPreview');
-      const placeholder = document.getElementById('uploadPlaceholder');
-
-      const fileURL = URL.createObjectURL(file);
-      videoElement.src = fileURL;
-      videoElement.style.display = 'block';
-      placeholder.style.display = 'none';
-
-      videoElement.onloadedmetadata = function() {
-        endVal = Math.min(60.0, videoElement.duration);
-        document.getElementById('endTime').textContent = formatTime(endVal);
-      };
-    }
-
-    function setMarker(type) {
-      const video = document.getElementById('videoPreview');
-      if (type === 'start') {
-        startVal = video.currentTime;
-        document.getElementById('startTime').textContent = formatTime(startVal);
-      } else {
-        endVal = video.currentTime;
-        document.getElementById('endTime').textContent = formatTime(endVal);
-      }
-    }
-
-    function adjustTime(type, amount) {
-      if (type === 'start') {
-        startVal = Math.max(0, startVal + amount);
-        document.getElementById('startTime').textContent = formatTime(startVal);
-      } else {
-        endVal = Math.min(60.0, Math.max(startVal + 0.5, endVal + amount));
-        document.getElementById('endTime').textContent = formatTime(endVal);
-      }
-    }
-
-    function toggleMute() {
-      isMuted = !isMuted;
-      const video = document.getElementById('videoPreview');
-      video.muted = isMuted;
-      const btn = document.getElementById('muteBtn');
-      btn.textContent = isMuted ? "🔇 Muted" : "🔊 Sound On";
-      btn.classList.toggle('active', isMuted);
-    }
-
-    function toggleRatio() {
-      isVertical = !isVertical;
-      const btn = document.getElementById('ratioBtn');
-      btn.textContent = isVertical ? "📱 9:16 Crop" : "📺 16:9 Wide";
-    }
-
-    function formatTime(seconds) {
-      const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
-      const secs = (seconds % 60).toFixed(1).padStart(4, '0');
-      return `${mins}:${secs}`;
-    }
-
-    function processVideo() {
-      alert(`MAE-B Engine: Processing local micro-video from ${formatTime(startVal)} to ${formatTime(endVal)} entirely on-device.`);
-    }
-  </script>
 </body>
 </html>
