@@ -26,10 +26,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 1.5rem;
+            padding: 1rem;
             overflow-x: hidden;
-            width: 100vw;
-            position: relative;
+            width: 100%;
         }
 
         /* Top Studio Header & Controls Bar */
@@ -39,12 +38,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             z-index: 100;
         }
 
         header h1 {
-            font-size: 2.75rem;
+            font-size: 2rem;
             font-weight: 800;
             letter-spacing: -0.04em;
             color: #111827;
@@ -52,17 +51,17 @@
         }
 
         header p {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 700;
             color: #0284c7;
             text-transform: uppercase;
             letter-spacing: 0.15em;
-            margin-top: 0.25rem;
+            margin-top: 0.2rem;
         }
 
         .topbar-actions {
             display: flex;
-            gap: 0.75rem;
+            gap: 0.5rem;
             align-items: center;
         }
 
@@ -70,10 +69,10 @@
             background: #ffffff;
             color: #334155;
             border: 1px solid #cbd5e1;
-            padding: 0.6rem 1rem;
-            font-size: 0.85rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
             transition: all 0.2s;
@@ -85,57 +84,55 @@
             border-color: #94a3b8;
         }
 
-        /* Workbench: Strict Mobile Stack vs Free Desktop Canvas */
+        /* Workbench: Strict Static Stack on Mobile vs Free Canvas on Desktop */
         .workbench {
             position: relative;
             width: 100%;
             max-width: 1300px;
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
-            overflow-x: hidden;
+            gap: 1rem;
         }
 
-        @media (min-width: 1024px) {
-            .workbench {
-                display: block;
-                height: 720px;
-            }
-        }
-
-        /* Studio Containers */
+        /* Mobile Container Defaults (Static Stack, Zero Overflow) */
         .floating-container {
             background: #ffffff;
             border: 1px solid #cbd5e1;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             display: flex;
             flex-direction: column;
             position: relative;
-            resize: vertical;
-            overflow: hidden;
-            transition: box-shadow 0.2s ease;
-            transform-origin: top left;
             width: 100%;
-            max-width: 100%;
+            height: auto;
+            min-height: 280px;
+            overflow: hidden;
         }
 
+        /* Desktop Overrides (Free-Floating & Resizable) */
         @media (min-width: 1024px) {
+            .workbench {
+                height: 720px;
+                display: block;
+            }
             .floating-container {
                 position: absolute;
                 resize: both;
             }
+            #box-version-stack { width: 320px; height: 420px; top: 10px; left: 10px; z-index: 10; }
+            #box-video-player  { width: 520px; height: 500px; top: 10px; left: 350px; z-index: 20; }
+            #box-actions       { width: 380px; height: 260px; top: 440px; left: 10px; z-index: 15; }
         }
 
         .floating-container.focused {
-            box-shadow: 0 0 0 2px #0284c7, 0 20px 35px -10px rgba(0,0,0,0.12);
+            box-shadow: 0 0 0 2px #0284c7, 0 15px 30px rgba(0,0,0,0.1);
             z-index: 50 !important;
         }
 
         /* Container Header */
         .container-header {
             background: #f8fafc;
-            padding: 0.75rem 1rem;
+            padding: 0.6rem 0.85rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -149,7 +146,7 @@
         }
 
         .container-title {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
             color: #64748b;
             text-transform: uppercase;
@@ -159,7 +156,7 @@
 
         .container-controls {
             display: flex;
-            gap: 0.4rem;
+            gap: 0.3rem;
             align-items: center;
         }
 
@@ -168,37 +165,31 @@
             border: none;
             color: #64748b;
             cursor: pointer;
-            font-size: 0.85rem;
-            padding: 0.1rem 0.3rem;
+            font-size: 0.75rem;
+            padding: 0.1rem 0.25rem;
             border-radius: 4px;
         }
         .icon-btn:hover { color: #0f172a; background: #e2e8f0; }
 
         .container-body {
-            padding: 1.25rem;
+            padding: 1rem;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.75rem;
             flex: 1;
             overflow-y: auto;
-            height: calc(100% - 43px);
         }
-
-        /* Default Desktop Positions */
-        #box-version-stack { width: 320px; height: 420px; top: 10px; left: 10px; z-index: 10; }
-        #box-video-player  { width: 520px; height: 500px; top: 10px; left: 350px; z-index: 20; }
-        #box-actions       { width: 380px; height: 260px; top: 440px; left: 10px; z-index: 15; }
 
         /* Video Workspace */
         .video-dropzone {
             border: 2px dashed #cbd5e1;
-            border-radius: 12px;
-            padding: 1rem;
+            border-radius: 10px;
+            padding: 0.75rem;
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.85rem;
+            gap: 0.75rem;
             background: #f8fafc;
             flex: 1;
             justify-content: center;
@@ -206,42 +197,38 @@
 
         #videoPlayer {
             width: 100%;
-            max-height: 240px;
-            border-radius: 8px;
+            max-height: 200px;
+            border-radius: 6px;
             background: #000000;
-            display: none;
             outline: none;
         }
 
         .compliance-badge {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 600;
             color: #0369a1;
             background: rgba(2, 132, 199, 0.08);
-            padding: 0.3rem 0.75rem;
+            padding: 0.25rem 0.6rem;
             border-radius: 9999px;
             border: 1px solid rgba(2, 132, 199, 0.2);
             cursor: pointer;
-            transition: transform 0.2s;
         }
-        .compliance-badge:hover { background: rgba(2, 132, 199, 0.15); }
 
         /* Button Architecture */
         .mae-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-height: 44px;
-            padding: 0 1rem;
+            min-height: 40px;
+            padding: 0 0.85rem;
             background-color: #0284c7;
             color: #ffffff;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 700;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.15s ease;
-            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.2);
             text-align: center;
             text-decoration: none;
         }
@@ -252,25 +239,12 @@
         .mae-btn-secondary:hover:not(:disabled) { background-color: #e2e8f0; color: #0f172a; }
 
         /* MAE-B Upgrade Levels */
-        body.mae-b-level-1 .mae-btn {
-            min-height: 52px !important;
-            font-size: 1.05rem !important;
-            padding: 0 1.25rem !important;
-        }
-        body.mae-b-level-1 .compliance-badge { font-size: 0.78rem; padding: 0.4rem 0.9rem; }
+        body.mae-b-level-1 .mae-btn { min-height: 48px !important; font-size: 0.95rem !important; }
+        body.mae-b-level-2 .mae-btn { min-height: 56px !important; font-size: 1.05rem !important; }
 
-        body.mae-b-level-2 .mae-btn {
-            min-height: 62px !important;
-            font-size: 1.2rem !important;
-            padding: 0 1.6rem !important;
-            border-radius: 16px !important;
-        }
-        body.mae-b-level-2 .compliance-badge { font-size: 0.88rem; padding: 0.5rem 1rem; }
-
-        /* Consolidated Video Bar */
         .video-toolbar {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.4rem;
             width: 100%;
             align-items: center;
         }
@@ -279,17 +253,16 @@
             position: relative;
             flex: 0 0 33.333%;
             overflow: hidden;
-            border-radius: 12px;
+            border-radius: 10px;
         }
         .file-upload-wrapper input[type="file"] {
             position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10;
         }
 
-        /* Version History Stack list */
         .version-list {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.4rem;
             flex: 1;
             overflow-y: auto;
         }
@@ -300,21 +273,21 @@
             align-items: center;
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            padding: 0.65rem 0.85rem;
-            border-radius: 10px;
-            font-size: 0.85rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
             font-weight: 600;
             color: #334155;
         }
 
-        .version-actions { display: flex; gap: 0.35rem; }
+        .version-actions { display: flex; gap: 0.25rem; }
         .version-btn {
-            background: #e2e8f0; border: none; color: #334155; cursor: pointer; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.5rem; border-radius: 6px;
+            background: #e2e8f0; border: none; color: #334155; cursor: pointer; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.4rem; border-radius: 4px;
         }
         .version-btn:hover { background: #0284c7; color: #fff; }
         .version-btn.del:hover { background: #dc2626; color: #fff; }
 
-        #actionStatus { font-size: 0.8rem; color: #0284c7; font-weight: 600; text-align: center; display: none; }
+        #actionStatus { font-size: 0.75rem; color: #0284c7; font-weight: 600; text-align: center; display: none; }
     </style>
 </head>
 <body>
@@ -325,8 +298,8 @@
             <p>MAE-B • Studio Video Engine</p>
         </header>
         <div class="topbar-actions">
-            <button class="studio-btn" id="sampleClipBtn" title="Load High-Contrast Sample Clip">Load Sample Clip</button>
-            <button class="studio-btn" id="resetLayoutBtn" title="Snap to Studio Default Layout">Reset Layout</button>
+            <button class="studio-btn" id="sampleClipBtn">Reload Clip</button>
+            <button class="studio-btn" id="resetLayoutBtn">Reset Layout</button>
         </div>
     </div>
 
@@ -337,14 +310,13 @@
             <div class="container-header" data-target="box-version-stack">
                 <span class="container-title">Version History Stack</span>
                 <div class="container-controls">
-                    <button class="icon-btn zoom-in-btn" title="Zoom In">+</button>
-                    <button class="icon-btn zoom-out-btn" title="Zoom Out">-</button>
-                    <span style="font-size:10px; color:#64748b;">⤢</span>
+                    <button class="icon-btn zoom-in-btn">+</button>
+                    <button class="icon-btn zoom-out-btn">-</button>
                 </div>
             </div>
             <div class="container-body">
                 <div id="versionListContainer" class="version-list">
-                    <p style="font-size: 0.8rem; color: #94a3b8; text-align: center; padding: 1rem;">No versions saved yet.</p>
+                    <!-- Populated dynamically -->
                 </div>
             </div>
         </div>
@@ -354,26 +326,24 @@
             <div class="container-header" data-target="box-video-player">
                 <span class="container-title">Video Workspace & Trim</span>
                 <div class="container-controls">
-                    <button class="icon-btn zoom-in-btn" title="Zoom In">+</button>
-                    <button class="icon-btn zoom-out-btn" title="Zoom Out">-</button>
-                    <span style="font-size:10px; color:#64748b;">⤢</span>
+                    <button class="icon-btn zoom-in-btn">+</button>
+                    <button class="icon-btn zoom-out-btn">-</button>
                 </div>
             </div>
             <div class="container-body">
                 <div class="video-dropzone">
-                    <p id="instructionText" style="font-size: 0.95rem; font-weight: 600; color: #475569;">Load Local Video or Sample</p>
-                    <video id="videoPlayer" controls playsinline preload="auto"></video>
-                    <span id="fileStatus" style="font-size: 0.8rem; color: #059669; font-weight: 600; display: none;"></span>
-                    <span class="compliance-badge" id="maeComplianceToggle" title="Tap to Cycle MAE-B Button Size Upgrades">MAE-B Standard (Tap to Scale)</span>
+                    <video id="videoPlayer" controls playsinline preload="auto" crossorigin="anonymous"></video>
+                    <span id="fileStatus" style="font-size: 0.75rem; color: #059669; font-weight: 600;">Loaded: Default Studio Clip</span>
+                    <span class="compliance-badge" id="maeComplianceToggle">MAE-B Standard (Tap to Scale)</span>
                 </div>
 
                 <div class="video-toolbar">
                     <div class="file-upload-wrapper">
-                        <button class="mae-btn mae-btn-secondary" id="selectButton" style="width: 100%; font-size: 0.85rem;">Change</button>
+                        <button class="mae-btn mae-btn-secondary" id="selectButton" style="width: 100%; font-size: 0.8rem;">Change</button>
                         <input type="file" id="fileInput" accept="video/mp4,video/quicktime,video/*">
                     </div>
-                    <button class="mae-btn mae-btn-secondary" id="setStartBtn" style="flex: 1; font-size: 0.85rem;" disabled>Set Start</button>
-                    <button class="mae-btn mae-btn-secondary" id="setEndBtn" style="flex: 1; font-size: 0.85rem;" disabled>Set End</button>
+                    <button class="mae-btn mae-btn-secondary" id="setStartBtn" style="flex: 1; font-size: 0.8rem;">Set Start</button>
+                    <button class="mae-btn mae-btn-secondary" id="setEndBtn" style="flex: 1; font-size: 0.8rem;">Set End</button>
                 </div>
             </div>
         </div>
@@ -383,15 +353,14 @@
             <div class="container-header" data-target="box-actions">
                 <span class="container-title">Editing Actions</span>
                 <div class="container-controls">
-                    <button class="icon-btn zoom-in-btn" title="Zoom In">+</button>
-                    <button class="icon-btn zoom-out-btn" title="Zoom Out">-</button>
-                    <span style="font-size:10px; color:#64748b;">⤢</span>
+                    <button class="icon-btn zoom-in-btn">+</button>
+                    <button class="icon-btn zoom-out-btn">-</button>
                 </div>
             </div>
-            <div class="container-body" style="justify-content: center; gap: 1rem;">
-                <button class="mae-btn" id="saveVersionBtn" disabled>Save as New Version</button>
+            <div class="container-body" style="justify-content: center; gap: 0.75rem;">
+                <button class="mae-btn" id="saveVersionBtn">Save as New Version</button>
                 <span id="actionStatus"></span>
-                <p style="font-size: 0.75rem; color: #64748b; text-align: center;">Shortcuts: [Space] Play, [I] Start, [O] End, [S] Save</p>
+                <p style="font-size: 0.7rem; color: #64748b; text-align: center;">Shortcuts: [Space] Play, [I] Start, [O] End, [S] Save</p>
             </div>
         </div>
 
@@ -401,7 +370,6 @@
         const workbenchCanvas = document.getElementById('workbenchCanvas');
         const fileInput = document.getElementById('fileInput');
         const fileStatus = document.getElementById('fileStatus');
-        const instructionText = document.getElementById('instructionText');
         const selectButton = document.getElementById('selectButton');
         const videoPlayer = document.getElementById('videoPlayer');
 
@@ -470,13 +438,13 @@
         }
         resetLayoutBtn.addEventListener('click', resetLayout);
 
-        // Free-Floating Desktop Dragging
+        // Desktop Dragging Logic
         document.querySelectorAll('.floating-container').forEach(container => {
             const header = container.querySelector('.container-header');
 
             header.addEventListener('pointerdown', (e) => {
                 if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
-                if (window.innerWidth < 1024) return; // Strict lock on mobile
+                if (window.innerWidth < 1024) return; // Locked on mobile
 
                 e.preventDefault();
                 container.classList.add('focused');
@@ -515,6 +483,7 @@
             container.addEventListener('mouseleave', () => container.classList.remove('focused'));
 
             function applyZoom(delta) {
+                if (window.innerWidth < 1024) return; // Disable canvas scaling on mobile for stability
                 zoomLevels[id] = Math.min(Math.max(zoomLevels[id] + delta, 0.75), 1.5);
                 container.style.transform = `scale(${zoomLevels[id]})`;
             }
@@ -522,7 +491,6 @@
             zoomIn.addEventListener('click', (e) => { e.stopPropagation(); applyZoom(0.1); });
             zoomOut.addEventListener('click', (e) => { e.stopPropagation(); applyZoom(-0.1); });
 
-            // Mouse wheel zoom support across container header
             container.querySelector('.container-header').addEventListener('wheel', (e) => {
                 if (window.innerWidth < 1024) return;
                 e.preventDefault();
@@ -545,12 +513,6 @@
             }
         });
 
-        // Sample Clip Loader
-        sampleClipBtn.addEventListener('click', () => {
-            const sampleURL = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
-            initVideo(sampleURL, "Sample High-Contrast Clip");
-        });
-
         function formatTime(seconds) {
             const mins = Math.floor(seconds / 60);
             const secs = (seconds % 60).toFixed(1);
@@ -559,10 +521,9 @@
 
         function renderVersionList() {
             if (versions.length === 0) {
-                versionListContainer.innerHTML = `<p style="font-size: 0.8rem; color: #94a3b8; text-align: center; padding: 1rem;">No versions saved yet.</p>`;
+                versionListContainer.innerHTML = `<p style="font-size: 0.75rem; color: #94a3b8; text-align: center; padding: 0.5rem;">No versions saved yet.</p>`;
                 return;
             }
-
             versionListContainer.innerHTML = '';
             versions.forEach((ver, index) => {
                 const label = index === 0 ? "Original" : `Version ${index}`;
@@ -583,27 +544,25 @@
         function initVideo(url, name) {
             versions = [{ name: "Original", url: url, range: null }];
             videoPlayer.src = url;
-            videoPlayer.style.display = 'block';
             videoPlayer.load();
-
-            instructionText.style.display = 'none';
             fileStatus.textContent = `Loaded: ${name}`;
             fileStatus.style.display = 'block';
-            selectButton.textContent = "Change";
-
             setStartBtn.disabled = false;
             setEndBtn.disabled = false;
             saveVersionBtn.disabled = false;
             actionStatus.style.display = 'none';
-
             renderVersionList();
         }
+
+        // Auto-load working sample clip immediately on startup so screen is never blank
+        const initialSampleURL = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+        initVideo(initialSampleURL, "Default Studio Clip");
+        sampleClipBtn.addEventListener('click', () => initVideo(initialSampleURL, "Reloaded Studio Clip"));
 
         fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
-                const videoURL = URL.createObjectURL(file);
-                initVideo(videoURL, file.name);
+                initVideo(URL.createObjectURL(file), file.name);
             }
         });
 
@@ -623,17 +582,14 @@
 
         saveVersionBtn.addEventListener('click', () => {
             if (versions.length === 0) return;
-            const editCount = versions.length;
-            const verName = `Version ${editCount}`;
-
+            const verName = `Version ${versions.length}`;
             versions.push({
                 name: verName,
                 url: videoPlayer.src,
                 range: { start: startTime, end: endTime > startTime ? endTime : videoPlayer.duration }
             });
-
             renderVersionList();
-            actionStatus.textContent = `Successfully saved "${verName}" to history stack!`;
+            actionStatus.textContent = `Saved "${verName}" to history stack!`;
             actionStatus.style.display = 'block';
         });
 
@@ -674,7 +630,6 @@
             actionStatus.style.display = 'block';
         };
 
-        // Keyboard Shortcuts
         window.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT') return;
             if (e.code === 'Space') {
