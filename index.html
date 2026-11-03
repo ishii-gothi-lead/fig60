@@ -192,19 +192,19 @@
             <p>MAE-B • Micro Video Engine</p>
         </header>
 
-        <!-- Video Workspace / Dropzone (Fully Functional Cross-Device Player) -->
+        <!-- Video Workspace / Dropzone -->
         <div class="video-container">
             <p id="instructionText">Click to Load Local Video</p>
             
-            <!-- Video Preview Display -->
-            <video id="videoPlayer" controls playsinline></video>
+            <!-- Video Preview Display with explicit cross-device attributes -->
+            <video id="videoPlayer" controls playsinline preload="auto"></video>
             
             <span id="fileStatus"></span>
             <span class="compliance-badge">MAE-B Compliance Active (56px)</span>
             
             <div class="file-upload-wrapper">
                 <button class="mae-button" id="selectButton">Select Local Video</button>
-                <input type="file" id="fileInput" accept="video/*">
+                <input type="file" id="fileInput" accept="video/mp4,video/quicktime,video/*">
             </div>
         </div>
 
@@ -214,7 +214,7 @@
             <button class="mae-button" style="background-color: #f8fafc; color: #1e293b; border: 1px solid #cbd5e1; box-shadow: none;">00:00.0</button>
         </div>
 
-        <!-- Actions Panel (All options preserved on all versions) -->
+        <!-- Actions Panel -->
         <div class="controls-container">
             <div class="workspace-label">Actions</div>
             <button class="mae-button" style="background-color: #475569;">Trim 60s Clip</button>
@@ -232,18 +232,22 @@
         fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
-                // Generate secure local object URL for both desktop & mobile rendering
+                // Revoke previous object URL to prevent memory leaks if changing videos multiple times
+                if (videoPlayer.src) {
+                    URL.revokeObjectURL(videoPlayer.src);
+                }
+
                 const videoURL = URL.createObjectURL(file);
                 videoPlayer.src = videoURL;
                 videoPlayer.style.display = 'block';
+                videoPlayer.load(); // Force decoder re-initialization for mobile wrappers
 
-                // Update interface states uniformly
                 instructionText.style.display = 'none';
                 fileStatus.textContent = `Loaded: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`;
                 fileStatus.style.display = 'block';
                 selectButton.textContent = "Change Video";
                 
-                console.log("[Fig 60 Engine] Video loaded successfully on client device:", file.name);
+                console.log("[Fig 60 Engine] Successfully bound video stream:", file.name);
             }
         });
     </script>
