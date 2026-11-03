@@ -155,12 +155,14 @@
             <p>MAE-B • Micro Video Engine</p>
         </header>
 
-        <!-- Video Workspace / Dropzone -->
+        <!-- Video Workspace / Dropzone with Native Label Wrapper -->
         <div class="video-container">
             <p>Click to Load Local Video</p>
             <span class="compliance-badge">MAE-B Compliance Active (56px)</span>
-            <button class="mae-button" onclick="document.getElementById('fileInput').click()">Select Local Video</button>
-            <input type="file" id="fileInput" accept="video/*" style="display: none;">
+            <label class="mae-button" style="cursor: pointer;">
+                Select Local Video
+                <input type="file" id="fileInput" accept="video/*" style="display: none;">
+            </label>
         </div>
 
         <!-- Start Time Control -->
