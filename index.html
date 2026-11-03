@@ -200,6 +200,7 @@
             max-height: 200px;
             border-radius: 6px;
             background: #000000;
+            display: none;
             outline: none;
         }
 
@@ -298,7 +299,7 @@
             <p>MAE-B • Studio Video Engine</p>
         </header>
         <div class="topbar-actions">
-            <button class="studio-btn" id="sampleClipBtn">Reload Clip</button>
+            <button class="studio-btn" id="sampleClipBtn" title="Load optional sample clip">Load Sample Clip</button>
             <button class="studio-btn" id="resetLayoutBtn">Reset Layout</button>
         </div>
     </div>
@@ -316,7 +317,7 @@
             </div>
             <div class="container-body">
                 <div id="versionListContainer" class="version-list">
-                    <!-- Populated dynamically -->
+                    <p style="font-size: 0.75rem; color: #94a3b8; text-align: center; padding: 0.5rem;">No versions saved yet.</p>
                 </div>
             </div>
         </div>
@@ -332,8 +333,9 @@
             </div>
             <div class="container-body">
                 <div class="video-dropzone">
+                    <p id="instructionText" style="font-size: 0.85rem; font-weight: 600; color: #475569;">Load Local Video or Sample</p>
                     <video id="videoPlayer" controls playsinline preload="auto" crossorigin="anonymous"></video>
-                    <span id="fileStatus" style="font-size: 0.75rem; color: #059669; font-weight: 600;">Loaded: Default Studio Clip</span>
+                    <span id="fileStatus" style="font-size: 0.75rem; color: #059669; font-weight: 600; display: none;"></span>
                     <span class="compliance-badge" id="maeComplianceToggle">MAE-B Standard (Tap to Scale)</span>
                 </div>
 
@@ -342,8 +344,8 @@
                         <button class="mae-btn mae-btn-secondary" id="selectButton" style="width: 100%; font-size: 0.8rem;">Change</button>
                         <input type="file" id="fileInput" accept="video/mp4,video/quicktime,video/*">
                     </div>
-                    <button class="mae-btn mae-btn-secondary" id="setStartBtn" style="flex: 1; font-size: 0.8rem;">Set Start</button>
-                    <button class="mae-btn mae-btn-secondary" id="setEndBtn" style="flex: 1; font-size: 0.8rem;">Set End</button>
+                    <button class="mae-btn mae-btn-secondary" id="setStartBtn" style="flex: 1; font-size: 0.8rem;" disabled>Set Start</button>
+                    <button class="mae-btn mae-btn-secondary" id="setEndBtn" style="flex: 1; font-size: 0.8rem;" disabled>Set End</button>
                 </div>
             </div>
         </div>
@@ -358,7 +360,7 @@
                 </div>
             </div>
             <div class="container-body" style="justify-content: center; gap: 0.75rem;">
-                <button class="mae-btn" id="saveVersionBtn">Save as New Version</button>
+                <button class="mae-btn" id="saveVersionBtn" disabled>Save as New Version</button>
                 <span id="actionStatus"></span>
                 <p style="font-size: 0.7rem; color: #64748b; text-align: center;">Shortcuts: [Space] Play, [I] Start, [O] End, [S] Save</p>
             </div>
@@ -370,6 +372,7 @@
         const workbenchCanvas = document.getElementById('workbenchCanvas');
         const fileInput = document.getElementById('fileInput');
         const fileStatus = document.getElementById('fileStatus');
+        const instructionText = document.getElementById('instructionText');
         const selectButton = document.getElementById('selectButton');
         const videoPlayer = document.getElementById('videoPlayer');
 
@@ -483,7 +486,7 @@
             container.addEventListener('mouseleave', () => container.classList.remove('focused'));
 
             function applyZoom(delta) {
-                if (window.innerWidth < 1024) return; // Disable canvas scaling on mobile for stability
+                if (window.innerWidth < 1024) return;
                 zoomLevels[id] = Math.min(Math.max(zoomLevels[id] + delta, 0.75), 1.5);
                 container.style.transform = `scale(${zoomLevels[id]})`;
             }
@@ -544,9 +547,12 @@
         function initVideo(url, name) {
             versions = [{ name: "Original", url: url, range: null }];
             videoPlayer.src = url;
+            videoPlayer.style.display = 'block';
             videoPlayer.load();
+            instructionText.style.display = 'none';
             fileStatus.textContent = `Loaded: ${name}`;
             fileStatus.style.display = 'block';
+            selectButton.textContent = "Change";
             setStartBtn.disabled = false;
             setEndBtn.disabled = false;
             saveVersionBtn.disabled = false;
@@ -554,10 +560,11 @@
             renderVersionList();
         }
 
-        // Auto-load working sample clip immediately on startup so screen is never blank
-        const initialSampleURL = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
-        initVideo(initialSampleURL, "Default Studio Clip");
-        sampleClipBtn.addEventListener('click', () => initVideo(initialSampleURL, "Reloaded Studio Clip"));
+        // Optional Sample Clip loader at user discretion
+        sampleClipBtn.addEventListener('click', () => {
+            const sampleURL = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+            initVideo(sampleURL, "Optional Sample Clip");
+        });
 
         fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
