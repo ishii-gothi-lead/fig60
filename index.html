@@ -33,7 +33,7 @@
             padding: 2rem 1rem;
         }
 
-        /* Clean Single-Column Workbench Layout */
+        /* Unified Single-Column Workbench Layout (Desktop & Mobile Parity) */
         .workbench {
             display: flex;
             flex-direction: column;
@@ -66,12 +66,12 @@
             letter-spacing: 0.15em;
         }
 
-        /* Video Workspace Container - Soft Edges & Rounded Corners */
+        /* Video Workspace Container */
         .video-container {
             background: #ffffff;
             border: 2px dashed #cbd5e1;
             border-radius: 20px;
-            padding: 2.75rem 1.5rem;
+            padding: 1.75rem 1.5rem;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -88,6 +88,17 @@
             letter-spacing: -0.01em;
         }
 
+        /* Fully Visible Video Player for Both Desktop & Mobile */
+        #videoPlayer {
+            width: 100%;
+            max-height: 320px;
+            border-radius: 12px;
+            background: #000000;
+            display: none;
+            object-fit: contain;
+            outline: none;
+        }
+
         .compliance-badge {
             font-size: 0.75rem;
             font-weight: 600;
@@ -99,7 +110,7 @@
             letter-spacing: 0.02em;
         }
 
-        /* Bulletproof File Picker Button Wrapper */
+        /* Bulletproof File Picker Wrapper (Cross-Device Safe) */
         .file-upload-wrapper {
             position: relative;
             width: 100%;
@@ -118,7 +129,7 @@
             z-index: 10;
         }
 
-        /* MAE-B Baseline Compliant Targets (56px+ height) with Soft Rounded Corners */
+        /* MAE-B Baseline Compliant Targets (56px+ height) */
         .mae-button {
             display: inline-flex;
             align-items: center;
@@ -144,7 +155,7 @@
             transform: translateY(-1px);
         }
 
-        /* Controls Panel - Soft Edges & Rounded Corners */
+        /* Controls Panel */
         .controls-container {
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -165,9 +176,8 @@
             margin-bottom: 0.15rem;
         }
 
-        /* Dynamic status text for loaded files */
         #fileStatus {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #059669;
             font-weight: 600;
             display: none;
@@ -182,9 +192,13 @@
             <p>MAE-B • Micro Video Engine</p>
         </header>
 
-        <!-- Video Workspace / Dropzone with Functional Binding -->
+        <!-- Video Workspace / Dropzone (Fully Functional Cross-Device Player) -->
         <div class="video-container">
             <p id="instructionText">Click to Load Local Video</p>
+            
+            <!-- Video Preview Display -->
+            <video id="videoPlayer" controls playsinline></video>
+            
             <span id="fileStatus"></span>
             <span class="compliance-badge">MAE-B Compliance Active (56px)</span>
             
@@ -200,7 +214,7 @@
             <button class="mae-button" style="background-color: #f8fafc; color: #1e293b; border: 1px solid #cbd5e1; box-shadow: none;">00:00.0</button>
         </div>
 
-        <!-- Actions Panel -->
+        <!-- Actions Panel (All options preserved on all versions) -->
         <div class="controls-container">
             <div class="workspace-label">Actions</div>
             <button class="mae-button" style="background-color: #475569;">Trim 60s Clip</button>
@@ -209,23 +223,27 @@
     </main>
 
     <script>
-        // Functional Video Engine Logic for Contributors & Runtime
         const fileInput = document.getElementById('fileInput');
         const fileStatus = document.getElementById('fileStatus');
         const instructionText = document.getElementById('instructionText');
         const selectButton = document.getElementById('selectButton');
+        const videoPlayer = document.getElementById('videoPlayer');
 
         fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
-                // Update UI to confirm functional state and file ingestion
-                instructionText.textContent = "Video Loaded Successfully";
-                fileStatus.textContent = `File: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`;
+                // Generate secure local object URL for both desktop & mobile rendering
+                const videoURL = URL.createObjectURL(file);
+                videoPlayer.src = videoURL;
+                videoPlayer.style.display = 'block';
+
+                // Update interface states uniformly
+                instructionText.style.display = 'none';
+                fileStatus.textContent = `Loaded: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`;
                 fileStatus.style.display = 'block';
                 selectButton.textContent = "Change Video";
                 
-                // Console trace for developers/contributors inspecting the DOM/runtime
-                console.log("[Fig 60 Engine] Video file ingested:", file);
+                console.log("[Fig 60 Engine] Video loaded successfully on client device:", file.name);
             }
         });
     </script>
