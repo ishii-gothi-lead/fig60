@@ -33,7 +33,7 @@
             padding: 2rem 1rem;
         }
 
-        /* Unified Single-Column Workbench Layout (Desktop & Mobile Parity) */
+        /* Unified Single-Column Workbench Layout */
         .workbench {
             display: flex;
             flex-direction: column;
@@ -88,7 +88,6 @@
             letter-spacing: -0.01em;
         }
 
-        /* Fully Visible Video Player for Both Desktop & Mobile */
         #videoPlayer {
             width: 100%;
             max-height: 320px;
@@ -110,7 +109,7 @@
             letter-spacing: 0.02em;
         }
 
-        /* Bulletproof File Picker Wrapper (Cross-Device Safe) */
+        /* Bulletproof File Picker Wrapper */
         .file-upload-wrapper {
             position: relative;
             width: 100%;
@@ -150,9 +149,15 @@
             box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
         }
 
-        .mae-button:hover {
+        .mae-button:hover:not(:disabled) {
             background-color: #0369a1;
             transform: translateY(-1px);
+        }
+
+        .mae-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
         }
 
         /* Controls Panel */
@@ -182,6 +187,14 @@
             font-weight: 600;
             display: none;
         }
+
+        #processingStatus {
+            font-size: 0.85rem;
+            color: #0284c7;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -196,7 +209,6 @@
         <div class="video-container">
             <p id="instructionText">Click to Load Local Video</p>
             
-            <!-- Video Preview Display with explicit cross-device attributes -->
             <video id="videoPlayer" controls playsinline preload="auto"></video>
             
             <span id="fileStatus"></span>
@@ -211,14 +223,15 @@
         <!-- Start Time Control -->
         <div class="controls-container">
             <div class="workspace-label">Start Time</div>
-            <button class="mae-button" style="background-color: #f8fafc; color: #1e293b; border: 1px solid #cbd5e1; box-shadow: none;">00:00.0</button>
+            <button class="mae-button" id="setStartTimeBtn" style="background-color: #f8fafc; color: #1e293b; border: 1px solid #cbd5e1; box-shadow: none;" disabled>Set Current Time as Start (00:00.0)</button>
         </div>
 
         <!-- Actions Panel -->
         <div class="controls-container">
             <div class="workspace-label">Actions</div>
-            <button class="mae-button" style="background-color: #475569;">Trim 60s Clip</button>
-            <button class="mae-button" style="background-color: #059669; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);">Save Local Copy</button>
+            <button class="mae-button" id="trimBtn" style="background-color: #475569;" disabled>Trim 60s Clip</button>
+            <button class="mae-button" id="saveBtn" style="background-color: #059669; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);" disabled>Save Local Copy</button>
+            <span id="processingStatus">Processing trim... Please wait.</span>
         </div>
     </main>
 
@@ -229,10 +242,25 @@
         const selectButton = document.getElementById('selectButton');
         const videoPlayer = document.getElementById('videoPlayer');
 
+        const setStartTimeBtn = document.getElementById('setStartTimeBtn');
+        const trimBtn = document.getElementById('trimBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const processingStatus = document.getElementById('processingStatus');
+
+        let startTimeSeconds = 0;
+        let trimmedBlob = null;
+
+        // Format seconds into MM:SS.S
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = (seconds % 60).toFixed(1);
+            return `${mins.toString().padStart(2, '0')}:${secs.padStart(4, '0')}`;
+        }
+
+        // Handle Video Load
         fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
-                // Revoke previous object URL to prevent memory leaks if changing videos multiple times
                 if (videoPlayer.src) {
                     URL.revokeObjectURL(videoPlayer.src);
                 }
@@ -240,15 +268,92 @@
                 const videoURL = URL.createObjectURL(file);
                 videoPlayer.src = videoURL;
                 videoPlayer.style.display = 'block';
-                videoPlayer.load(); // Force decoder re-initialization for mobile wrappers
+                videoPlayer.load();
 
                 instructionText.style.display = 'none';
                 fileStatus.textContent = `Loaded: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`;
                 fileStatus.style.display = 'block';
                 selectButton.textContent = "Change Video";
-                
-                console.log("[Fig 60 Engine] Successfully bound video stream:", file.name);
+
+                // Enable buttons once video is loaded
+                setStartTimeBtn.disabled = false;
+                trimBtn.disabled = false;
+                saveBtn.disabled = true; // Enabled after trimming
+                startTimeSeconds = 0;
+                setStartTimeBtn.textContent = `Set Current Time as Start (00:00.0)`;
             }
+        });
+
+        // 1. Set Start Time Action
+        setStartTimeBtn.addEventListener('click', function() {
+            startTimeSeconds = videoPlayer.currentTime;
+            setStartTimeBtn.textContent = `Start Time Set: ${formatTime(startTimeSeconds)}`;
+        });
+
+        // 2. Trim 60s Clip Action using Canvas & MediaRecorder
+        trimBtn.addEventListener('click', async function() {
+            if (!videoPlayer.src) return;
+
+            processingStatus.style.display = 'block';
+            trimBtn.disabled = true;
+
+            // Prepare Canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = videoPlayer.videoWidth || 1280;
+            canvas.height = videoPlayer.videoHeight || 720;
+            const ctx = canvas.getContext('2d');
+
+            // Capture stream from Canvas
+            const stream = canvas.captureStream(30); // 30 FPS
+            const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+            const chunks = [];
+
+            mediaRecorder.ondataavailable = (e) => {
+                if (e.data.size > 0) chunks.push(e.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                trimmedBlob = new Blob(chunks, { type: 'video/webm' });
+                processingStatus.style.display = 'none';
+                trimBtn.disabled = false;
+                saveBtn.disabled = false;
+                alert('60-second clip trimmed successfully! Click "Save Local Copy" to download.');
+            };
+
+            // Jump to start time and play
+            videoPlayer.currentTime = startTimeSeconds;
+            await videoPlayer.play();
+            mediaRecorder.start();
+
+            const durationToRecord = Math.min(60, videoPlayer.duration - startTimeSeconds);
+            const startTimeMs = Date.now();
+
+            function drawFrame() {
+                const elapsed = (Date.now() - startTimeMs) / 1000;
+                if (elapsed >= durationToRecord || videoPlayer.ended) {
+                    videoPlayer.pause();
+                    mediaRecorder.stop();
+                    return;
+                }
+                ctx.drawImage(videoPlayer, 0, 0, canvas.width, canvas.height);
+                requestAnimationFrame(drawFrame);
+            }
+
+            drawFrame();
+        });
+
+        // 3. Save Local Copy Action
+        saveBtn.addEventListener('click', function() {
+            if (!trimmedBlob) return;
+
+            const downloadUrl = URL.createObjectURL(trimmedBlob);
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = `fig60-trimmed-${Date.now()}.webm`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(downloadUrl);
         });
     </script>
 </body>
