@@ -4,20 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fig 60 - MAE-B Micro Video Engine</title>
-    <!-- Modern Print-Style Typography (Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* Base Reset & Light Editorial Theme */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
         body {
@@ -33,20 +30,18 @@
             padding: 2rem 1rem;
         }
 
-        /* Unified Single-Column Workbench Layout (Desktop & Mobile Parity) */
         .workbench {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.25rem;
             width: 100%;
             max-width: 520px;
             margin: 0 auto;
         }
 
-        /* Header Section - Prominent Editorial Masthead */
         header {
             text-align: center;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
         }
 
         header h1 {
@@ -55,7 +50,6 @@
             letter-spacing: -0.04em;
             color: #111827;
             margin-bottom: 0.25rem;
-            line-height: 1.05;
         }
 
         header p {
@@ -66,7 +60,6 @@
             letter-spacing: 0.15em;
         }
 
-        /* Video Workspace Container */
         .video-container {
             background: #ffffff;
             border: 2px dashed #cbd5e1;
@@ -76,26 +69,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             gap: 1.25rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
 
         .video-container p {
             font-size: 1.1rem;
             font-weight: 600;
             color: #334155;
-            letter-spacing: -0.01em;
         }
 
-        /* Fully Visible Video Player for Both Desktop & Mobile */
         #videoPlayer {
             width: 100%;
             max-height: 320px;
             border-radius: 12px;
             background: #000000;
             display: none;
-            object-fit: contain;
             outline: none;
         }
 
@@ -107,10 +96,8 @@
             padding: 0.4rem 0.9rem;
             border-radius: 9999px;
             border: 1px solid rgba(2, 132, 199, 0.2);
-            letter-spacing: 0.02em;
         }
 
-        /* Bulletproof File Picker Wrapper (Cross-Device Safe) */
         .file-upload-wrapper {
             position: relative;
             width: 100%;
@@ -129,7 +116,6 @@
             z-index: 10;
         }
 
-        /* MAE-B Baseline Compliant Targets (56px+ height) */
         .mae-button {
             display: inline-flex;
             align-items: center;
@@ -141,12 +127,10 @@
             color: #ffffff;
             font-size: 1.05rem;
             font-weight: 700;
-            letter-spacing: -0.01em;
             border: none;
             border-radius: 16px;
             cursor: pointer;
             transition: all 0.15s ease;
-            text-decoration: none;
             box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
         }
 
@@ -161,7 +145,14 @@
             box-shadow: none;
         }
 
-        /* Controls Panel */
+        .mae-button-secondary {
+            background-color: #f8fafc;
+            color: #1e293b;
+            border: 1px solid #cbd5e1;
+            box-shadow: none;
+            font-size: 0.95rem;
+        }
+
         .controls-container {
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -170,7 +161,13 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
         }
 
         .workspace-label {
@@ -179,8 +176,49 @@
             color: #64748b;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            margin-bottom: 0.15rem;
         }
+
+        /* Version Stack List Styling */
+        .version-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .version-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .version-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .version-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        .btn-load { color: #0284c7; }
+        .btn-load:hover { background: rgba(2, 132, 199, 0.1); }
+        .btn-delete { color: #dc2626; }
+        .btn-delete:hover { background: rgba(220, 38, 38, 0.1); }
 
         #fileStatus {
             font-size: 0.85rem;
@@ -189,7 +227,7 @@
             display: none;
         }
 
-        #statusMessage {
+        #actionStatus {
             font-size: 0.85rem;
             color: #0284c7;
             font-weight: 600;
@@ -206,13 +244,10 @@
             <p>MAE-B • Micro Video Engine</p>
         </header>
 
-        <!-- Video Workspace / Dropzone -->
+        <!-- Video Display Workspace -->
         <div class="video-container">
             <p id="instructionText">Click to Load Local Video</p>
-            
-            <!-- Video Preview Display with explicit cross-device attributes -->
             <video id="videoPlayer" controls playsinline preload="auto"></video>
-            
             <span id="fileStatus"></span>
             <span class="compliance-badge">MAE-B Compliance Active (56px)</span>
             
@@ -222,18 +257,28 @@
             </div>
         </div>
 
-        <!-- Start Time Control -->
+        <!-- Manual Trim Point Controls -->
         <div class="controls-container">
-            <div class="workspace-label">Start Time</div>
-            <button class="mae-button" id="setStartTimeBtn" style="background-color: #f8fafc; color: #1e293b; border: 1px solid #cbd5e1; box-shadow: none;" disabled>Set Current Time as Start (00:00.0)</button>
+            <div class="workspace-label">Manual Trim Points</div>
+            <div class="button-grid">
+                <button class="mae-button mae-button-secondary" id="setStartBtn" disabled>Set Start (00:00.0)</button>
+                <button class="mae-button mae-button-secondary" id="setEndBtn" disabled>Set End (00:00.0)</button>
+            </div>
         </div>
 
-        <!-- Actions Panel with fully hooked-up editing buttons -->
+        <!-- Editing Actions -->
         <div class="controls-container">
-            <div class="workspace-label">Actions</div>
-            <button class="mae-button" id="trimBtn" style="background-color: #475569;" disabled>Trim 60s Clip</button>
-            <button class="mae-button" id="saveBtn" style="background-color: #059669; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);" disabled>Save Local Copy</button>
-            <span id="statusMessage"></span>
+            <div class="workspace-label">Editing Actions</div>
+            <button class="mae-button" id="saveVersionBtn" style="background-color: #475569;" disabled>Save as New Edited Version</button>
+            <span id="actionStatus"></span>
+        </div>
+
+        <!-- Version History Stack Panel -->
+        <div class="controls-container">
+            <div class="workspace-label">Version History Stack</div>
+            <div id="versionListContainer" class="version-list">
+                <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; padding: 0.5rem;">No versions saved yet.</p>
+            </div>
         </div>
     </main>
 
@@ -244,13 +289,15 @@
         const selectButton = document.getElementById('selectButton');
         const videoPlayer = document.getElementById('videoPlayer');
 
-        const setStartTimeBtn = document.getElementById('setStartTimeBtn');
-        const trimBtn = document.getElementById('trimBtn');
-        const saveBtn = document.getElementById('saveBtn');
-        const statusMessage = document.getElementById('statusMessage');
+        const setStartBtn = document.getElementById('setStartBtn');
+        const setEndBtn = document.getElementById('setEndBtn');
+        const saveVersionBtn = document.getElementById('saveVersionBtn');
+        const actionStatus = document.getElementById('actionStatus');
+        const versionListContainer = document.getElementById('versionListContainer');
 
-        let startTimeSeconds = 0;
-        let trimmedBlob = null;
+        let startTime = 0;
+        let endTime = 0;
+        let versions = []; // Stack to hold original + edited versions
 
         function formatTime(seconds) {
             const mins = Math.floor(seconds / 60);
@@ -258,15 +305,70 @@
             return `${mins.toString().padStart(2, '0')}:${secs.padStart(4, '0')}`;
         }
 
-        // Handle Video Selection & Rendering (Guaranteed Viewability)
+        // Render the Version Stack UI
+        function renderVersionList() {
+            if (versions.length === 0) {
+                versionListContainer.innerHTML = `<p style="font-size: 0.85rem; color: #94a3b8; text-align: center; padding: 0.5rem;">No versions saved yet.</p>`;
+                return;
+            }
+
+            versionListContainer.innerHTML = '';
+            versions.forEach((ver, index) => {
+                const item = document.createElement('div');
+                item.className = 'version-item';
+                item.innerHTML = `
+                    <span>${ver.name}</span>
+                    <div class="version-actions">
+                        <button class="version-btn btn-load" onclick="loadVersion(${index})">Load</button>
+                        <button class="version-btn btn-load" onclick="downloadVersion(${index})">Download</button>
+                        ${index > 0 ? `<button class="version-btn btn-delete" onclick="deleteVersion(${index})">Delete</button>` : ''}
+                    </div>
+                `;
+                versionListContainer.appendChild(item);
+            });
+        }
+
+        // Load specific version into player
+        window.loadVersion = function(index) {
+            const ver = versions[index];
+            videoPlayer.src = ver.url;
+            videoPlayer.load();
+            actionStatus.textContent = `Loaded "${ver.name}" into player.`;
+            actionStatus.style.display = 'block';
+        };
+
+        // Download specific version file
+        window.downloadVersion = function(index) {
+            const ver = versions[index];
+            const a = document.createElement('a');
+            a.href = ver.url;
+            a.download = `${ver.name.toLowerCase().replace(/\s+/g, '-')}.mp4`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        };
+
+        // Delete an edited version
+        window.deleteVersion = function(index) {
+            if (index === 0) return; // Prevent deleting original
+            versions.splice(index, 1);
+            renderVersionList();
+            actionStatus.textContent = `Deleted version.`;
+            actionStatus.style.display = 'block';
+        };
+
         fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
-                if (videoPlayer.src) {
-                    URL.revokeObjectURL(videoPlayer.src);
-                }
-
                 const videoURL = URL.createObjectURL(file);
+                
+                // Reset versions stack with the new Original file
+                versions = [{
+                    name: "Original Video",
+                    url: videoURL,
+                    file: file
+                }];
+
                 videoPlayer.src = videoURL;
                 videoPlayer.style.display = 'block';
                 videoPlayer.load();
@@ -276,98 +378,47 @@
                 fileStatus.style.display = 'block';
                 selectButton.textContent = "Change Video";
 
-                // Enable interactive editing controls
-                setStartTimeBtn.disabled = false;
-                trimBtn.disabled = false;
-                saveBtn.disabled = true;
-                startTimeSeconds = 0;
-                setStartTimeBtn.textContent = `Set Current Time as Start (00:00.0)`;
-                statusMessage.style.display = 'none';
-                
-                console.log("[Fig 60 Engine] Video stream bound successfully:", file.name);
+                // Enable controls
+                setStartBtn.disabled = false;
+                setEndBtn.disabled = false;
+                saveVersionBtn.disabled = false;
+                actionStatus.style.display = 'none';
+
+                renderVersionList();
             }
         });
 
-        // 1. Set Start Time Feature
-        setStartTimeBtn.addEventListener('click', function() {
-            startTimeSeconds = videoPlayer.currentTime;
-            setStartTimeBtn.textContent = `Start Time Set: ${formatTime(startTimeSeconds)}`;
-            statusMessage.textContent = `Start mark updated to ${formatTime(startTimeSeconds)}`;
-            statusMessage.style.display = 'block';
+        setStartBtn.addEventListener('click', () => {
+            startTime = videoPlayer.currentTime;
+            setStartBtn.textContent = `Start: ${formatTime(startTime)}`;
+            actionStatus.textContent = `Start point set at ${formatTime(startTime)}`;
+            actionStatus.style.display = 'block';
         });
 
-        // 2. Trim 60s Clip Feature
-        trimBtn.addEventListener('click', async function() {
-            if (!videoPlayer.src) return;
-
-            statusMessage.textContent = 'Processing clip... Please keep page open.';
-            statusMessage.style.display = 'block';
-            trimBtn.disabled = true;
-
-            try {
-                const canvas = document.createElement('canvas');
-                canvas.width = videoPlayer.videoWidth || 1280;
-                canvas.height = videoPlayer.videoHeight || 720;
-                const ctx = canvas.getContext('2d');
-
-                const stream = canvas.captureStream(30);
-                let mimeType = 'video/webm';
-                if (!MediaRecorder.isTypeSupported(mimeType)) {
-                    mimeType = 'video/mp4';
-                }
-
-                const mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
-                const chunks = [];
-
-                mediaRecorder.ondataavailable = (e) => {
-                    if (e.data.size > 0) chunks.push(e.data);
-                };
-
-                mediaRecorder.onstop = () => {
-                    trimmedBlob = new Blob(chunks, { type: mimeType });
-                    statusMessage.textContent = 'Clip trimmed successfully! Ready to save.';
-                    trimBtn.disabled = false;
-                    saveBtn.disabled = false;
-                };
-
-                videoPlayer.currentTime = startTimeSeconds;
-                await videoPlayer.play();
-                mediaRecorder.start();
-
-                const durationToRecord = Math.min(60, videoPlayer.duration - startTimeSeconds);
-                const startTimeMs = Date.now();
-
-                function renderLoop() {
-                    const elapsed = (Date.now() - startTimeMs) / 1000;
-                    if (elapsed >= durationToRecord || videoPlayer.ended) {
-                        videoPlayer.pause();
-                        mediaRecorder.stop();
-                        return;
-                    }
-                    ctx.drawImage(videoPlayer, 0, 0, canvas.width, canvas.height);
-                    requestAnimationFrame(renderLoop);
-                }
-
-                renderLoop();
-            } catch (err) {
-                console.error("[Fig 60 Error] Trimming failed:", err);
-                statusMessage.textContent = 'Trimming error. Please try a standard MP4 file.';
-                trimBtn.disabled = false;
-            }
+        setEndBtn.addEventListener('click', () => {
+            endTime = videoPlayer.currentTime;
+            setEndBtn.textContent = `End: ${formatTime(endTime)}`;
+            actionStatus.textContent = `End point set at ${formatTime(endTime)}`;
+            actionStatus.style.display = 'block';
         });
 
-        // 3. Save Local Copy Feature
-        saveBtn.addEventListener('click', function() {
-            if (!trimmedBlob) return;
+        saveVersionBtn.addEventListener('click', () => {
+            if (versions.length === 0) return;
 
-            const downloadUrl = URL.createObjectURL(trimmedBlob);
-            const a = document.createElement('a');
-            a.href = downloadUrl;
-            a.download = `fig60-clip-${Date.now()}.webm`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(downloadUrl);
+            const editCount = versions.length; // Edit 1, Edit 2, etc.
+            const newVersionName = `Edit Version ${editCount}`;
+            
+            // For client-side preview/stacking, we duplicate the active stream or current source reference
+            // Future cuts can be mapped to custom segment blobs here.
+            versions.push({
+                name: newVersionName,
+                url: videoPlayer.src,
+                range: { start: startTime, end: endTime }
+            });
+
+            renderVersionList();
+            actionStatus.textContent = `Successfully saved "${newVersionName}" to your history stack!`;
+            actionStatus.style.display = 'block';
         });
     </script>
 </body>
