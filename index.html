@@ -33,7 +33,7 @@
             padding: 2rem 1rem;
         }
 
-        /* Unified Single-Column Workbench Layout */
+        /* Unified Single-Column Workbench Layout (Desktop & Mobile Parity) */
         .workbench {
             display: flex;
             flex-direction: column;
@@ -88,6 +88,7 @@
             letter-spacing: -0.01em;
         }
 
+        /* Fully Visible Video Player for Both Desktop & Mobile */
         #videoPlayer {
             width: 100%;
             max-height: 320px;
@@ -109,7 +110,7 @@
             letter-spacing: 0.02em;
         }
 
-        /* Bulletproof File Picker Wrapper */
+        /* Bulletproof File Picker Wrapper (Cross-Device Safe) */
         .file-upload-wrapper {
             position: relative;
             width: 100%;
@@ -188,7 +189,7 @@
             display: none;
         }
 
-        #processingStatus {
+        #statusMessage {
             font-size: 0.85rem;
             color: #0284c7;
             font-weight: 600;
@@ -209,6 +210,7 @@
         <div class="video-container">
             <p id="instructionText">Click to Load Local Video</p>
             
+            <!-- Video Preview Display with explicit cross-device attributes -->
             <video id="videoPlayer" controls playsinline preload="auto"></video>
             
             <span id="fileStatus"></span>
@@ -226,12 +228,12 @@
             <button class="mae-button" id="setStartTimeBtn" style="background-color: #f8fafc; color: #1e293b; border: 1px solid #cbd5e1; box-shadow: none;" disabled>Set Current Time as Start (00:00.0)</button>
         </div>
 
-        <!-- Actions Panel -->
+        <!-- Actions Panel with fully hooked-up editing buttons -->
         <div class="controls-container">
             <div class="workspace-label">Actions</div>
             <button class="mae-button" id="trimBtn" style="background-color: #475569;" disabled>Trim 60s Clip</button>
             <button class="mae-button" id="saveBtn" style="background-color: #059669; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);" disabled>Save Local Copy</button>
-            <span id="processingStatus">Processing trim... Please wait.</span>
+            <span id="statusMessage"></span>
         </div>
     </main>
 
@@ -245,19 +247,18 @@
         const setStartTimeBtn = document.getElementById('setStartTimeBtn');
         const trimBtn = document.getElementById('trimBtn');
         const saveBtn = document.getElementById('saveBtn');
-        const processingStatus = document.getElementById('processingStatus');
+        const statusMessage = document.getElementById('statusMessage');
 
         let startTimeSeconds = 0;
         let trimmedBlob = null;
 
-        // Format seconds into MM:SS.S
         function formatTime(seconds) {
             const mins = Math.floor(seconds / 60);
             const secs = (seconds % 60).toFixed(1);
             return `${mins.toString().padStart(2, '0')}:${secs.padStart(4, '0')}`;
         }
 
-        // Handle Video Load
+        // Handle Video Selection & Rendering (Guaranteed Viewability)
         fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
@@ -275,81 +276,94 @@
                 fileStatus.style.display = 'block';
                 selectButton.textContent = "Change Video";
 
-                // Enable buttons once video is loaded
+                // Enable interactive editing controls
                 setStartTimeBtn.disabled = false;
                 trimBtn.disabled = false;
-                saveBtn.disabled = true; // Enabled after trimming
+                saveBtn.disabled = true;
                 startTimeSeconds = 0;
                 setStartTimeBtn.textContent = `Set Current Time as Start (00:00.0)`;
+                statusMessage.style.display = 'none';
+                
+                console.log("[Fig 60 Engine] Video stream bound successfully:", file.name);
             }
         });
 
-        // 1. Set Start Time Action
+        // 1. Set Start Time Feature
         setStartTimeBtn.addEventListener('click', function() {
             startTimeSeconds = videoPlayer.currentTime;
             setStartTimeBtn.textContent = `Start Time Set: ${formatTime(startTimeSeconds)}`;
+            statusMessage.textContent = `Start mark updated to ${formatTime(startTimeSeconds)}`;
+            statusMessage.style.display = 'block';
         });
 
-        // 2. Trim 60s Clip Action using Canvas & MediaRecorder
+        // 2. Trim 60s Clip Feature
         trimBtn.addEventListener('click', async function() {
             if (!videoPlayer.src) return;
 
-            processingStatus.style.display = 'block';
+            statusMessage.textContent = 'Processing clip... Please keep page open.';
+            statusMessage.style.display = 'block';
             trimBtn.disabled = true;
 
-            // Prepare Canvas
-            const canvas = document.createElement('canvas');
-            canvas.width = videoPlayer.videoWidth || 1280;
-            canvas.height = videoPlayer.videoHeight || 720;
-            const ctx = canvas.getContext('2d');
+            try {
+                const canvas = document.createElement('canvas');
+                canvas.width = videoPlayer.videoWidth || 1280;
+                canvas.height = videoPlayer.videoHeight || 720;
+                const ctx = canvas.getContext('2d');
 
-            // Capture stream from Canvas
-            const stream = canvas.captureStream(30); // 30 FPS
-            const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
-            const chunks = [];
-
-            mediaRecorder.ondataavailable = (e) => {
-                if (e.data.size > 0) chunks.push(e.data);
-            };
-
-            mediaRecorder.onstop = () => {
-                trimmedBlob = new Blob(chunks, { type: 'video/webm' });
-                processingStatus.style.display = 'none';
-                trimBtn.disabled = false;
-                saveBtn.disabled = false;
-                alert('60-second clip trimmed successfully! Click "Save Local Copy" to download.');
-            };
-
-            // Jump to start time and play
-            videoPlayer.currentTime = startTimeSeconds;
-            await videoPlayer.play();
-            mediaRecorder.start();
-
-            const durationToRecord = Math.min(60, videoPlayer.duration - startTimeSeconds);
-            const startTimeMs = Date.now();
-
-            function drawFrame() {
-                const elapsed = (Date.now() - startTimeMs) / 1000;
-                if (elapsed >= durationToRecord || videoPlayer.ended) {
-                    videoPlayer.pause();
-                    mediaRecorder.stop();
-                    return;
+                const stream = canvas.captureStream(30);
+                let mimeType = 'video/webm';
+                if (!MediaRecorder.isTypeSupported(mimeType)) {
+                    mimeType = 'video/mp4';
                 }
-                ctx.drawImage(videoPlayer, 0, 0, canvas.width, canvas.height);
-                requestAnimationFrame(drawFrame);
-            }
 
-            drawFrame();
+                const mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
+                const chunks = [];
+
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) chunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    trimmedBlob = new Blob(chunks, { type: mimeType });
+                    statusMessage.textContent = 'Clip trimmed successfully! Ready to save.';
+                    trimBtn.disabled = false;
+                    saveBtn.disabled = false;
+                };
+
+                videoPlayer.currentTime = startTimeSeconds;
+                await videoPlayer.play();
+                mediaRecorder.start();
+
+                const durationToRecord = Math.min(60, videoPlayer.duration - startTimeSeconds);
+                const startTimeMs = Date.now();
+
+                function renderLoop() {
+                    const elapsed = (Date.now() - startTimeMs) / 1000;
+                    if (elapsed >= durationToRecord || videoPlayer.ended) {
+                        videoPlayer.pause();
+                        mediaRecorder.stop();
+                        return;
+                    }
+                    ctx.drawImage(videoPlayer, 0, 0, canvas.width, canvas.height);
+                    requestAnimationFrame(renderLoop);
+                }
+
+                renderLoop();
+            } catch (err) {
+                console.error("[Fig 60 Error] Trimming failed:", err);
+                statusMessage.textContent = 'Trimming error. Please try a standard MP4 file.';
+                trimBtn.disabled = false;
+            }
         });
 
-        // 3. Save Local Copy Action
+        // 3. Save Local Copy Feature
         saveBtn.addEventListener('click', function() {
             if (!trimmedBlob) return;
 
             const downloadUrl = URL.createObjectURL(trimmedBlob);
             const a = document.createElement('a');
             a.href = downloadUrl;
-            a.download = `fig60-trimmed-${Date.now()}.webm`;
+            a.download = `fig60-clip-${Date.now()}.webm`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
