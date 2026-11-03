@@ -99,6 +99,26 @@
             letter-spacing: 0.02em;
         }
 
+        /* Bulletproof File Picker Button Wrapper */
+        .file-upload-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+
+        /* The actual file input stretched invisibly over the entire button area */
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 10;
+        }
+
         /* MAE-B Baseline Compliant Targets (56px+ height) with Soft Rounded Corners */
         .mae-button {
             display: inline-flex;
@@ -155,13 +175,15 @@
             <p>MAE-B • Micro Video Engine</p>
         </header>
 
-        <!-- Video Workspace / Dropzone (Using original reliable JS trigger) -->
+        <!-- Video Workspace / Dropzone with Bulletproof File Input Overlay -->
         <div class="video-container">
             <p>Click to Load Local Video</p>
             <span class="compliance-badge">MAE-B Compliance Active (56px)</span>
             
-            <button class="mae-button" onclick="document.getElementById('fileInput').click()">Select Local Video</button>
-            <input type="file" id="fileInput" accept="video/*" style="display: none;">
+            <div class="file-upload-wrapper">
+                <button class="mae-button">Select Local Video</button>
+                <input type="file" id="fileInput" accept="video/*">
+            </div>
         </div>
 
         <!-- Start Time Control -->
