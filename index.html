@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Fig 60 - MAE-B Micro Video Engine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,6 +28,7 @@
             align-items: center;
             padding: 1.5rem;
             overflow-x: hidden;
+            width: 100vw;
             position: relative;
         }
 
@@ -43,18 +44,20 @@
         }
 
         header h1 {
-            font-size: 2.25rem;
+            font-size: 2.75rem;
             font-weight: 800;
             letter-spacing: -0.04em;
             color: #111827;
+            line-height: 1;
         }
 
         header p {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: #0284c7;
             text-transform: uppercase;
             letter-spacing: 0.15em;
+            margin-top: 0.25rem;
         }
 
         .topbar-actions {
@@ -82,7 +85,7 @@
             border-color: #94a3b8;
         }
 
-        /* Workbench: Mobile Static Stack / Desktop Free-Floating Canvas */
+        /* Workbench: Strict Mobile Stack vs Free Desktop Canvas */
         .workbench {
             position: relative;
             width: 100%;
@@ -90,6 +93,7 @@
             display: flex;
             flex-direction: column;
             gap: 1.25rem;
+            overflow-x: hidden;
         }
 
         @media (min-width: 1024px) {
@@ -99,7 +103,7 @@
             }
         }
 
-        /* Free-Floating Studio Containers */
+        /* Studio Containers */
         .floating-container {
             background: #ffffff;
             border: 1px solid #cbd5e1;
@@ -108,15 +112,18 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            resize: both;
+            resize: vertical;
             overflow: hidden;
             transition: box-shadow 0.2s ease;
             transform-origin: top left;
+            width: 100%;
+            max-width: 100%;
         }
 
         @media (min-width: 1024px) {
             .floating-container {
                 position: absolute;
+                resize: both;
             }
         }
 
@@ -125,10 +132,10 @@
             z-index: 50 !important;
         }
 
-        /* Container Header / Drag Handle */
+        /* Container Header */
         .container-header {
             background: #f8fafc;
-            padding: 0.65rem 1rem;
+            padding: 0.75rem 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -147,6 +154,7 @@
             color: #64748b;
             text-transform: uppercase;
             letter-spacing: 0.1em;
+            pointer-events: none;
         }
 
         .container-controls {
@@ -173,15 +181,15 @@
             gap: 1rem;
             flex: 1;
             overflow-y: auto;
-            height: calc(100% - 37px);
+            height: calc(100% - 43px);
         }
 
-        /* Default Desktop Layout Positions */
+        /* Default Desktop Positions */
         #box-version-stack { width: 320px; height: 420px; top: 10px; left: 10px; z-index: 10; }
         #box-video-player  { width: 520px; height: 500px; top: 10px; left: 350px; z-index: 20; }
         #box-actions       { width: 380px; height: 260px; top: 440px; left: 10px; z-index: 15; }
 
-        /* Video Workspace Styling */
+        /* Video Workspace */
         .video-dropzone {
             border: 2px dashed #cbd5e1;
             border-radius: 12px;
@@ -243,28 +251,21 @@
         .mae-btn-secondary { background-color: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; box-shadow: none; }
         .mae-btn-secondary:hover:not(:disabled) { background-color: #e2e8f0; color: #0f172a; }
 
-        /* MAE-B Level 1 Scaling Upgrade */
+        /* MAE-B Upgrade Levels */
         body.mae-b-level-1 .mae-btn {
             min-height: 52px !important;
             font-size: 1.05rem !important;
             padding: 0 1.25rem !important;
         }
-        body.mae-b-level-1 .compliance-badge {
-            font-size: 0.78rem;
-            padding: 0.4rem 0.9rem;
-        }
+        body.mae-b-level-1 .compliance-badge { font-size: 0.78rem; padding: 0.4rem 0.9rem; }
 
-        /* MAE-B Level 2 Scaling Upgrade (Maximum Size) */
         body.mae-b-level-2 .mae-btn {
             min-height: 62px !important;
             font-size: 1.2rem !important;
             padding: 0 1.6rem !important;
             border-radius: 16px !important;
         }
-        body.mae-b-level-2 .compliance-badge {
-            font-size: 0.88rem;
-            padding: 0.5rem 1rem;
-        }
+        body.mae-b-level-2 .compliance-badge { font-size: 0.88rem; padding: 0.5rem 1rem; }
 
         /* Consolidated Video Bar */
         .video-toolbar {
@@ -348,7 +349,7 @@
             </div>
         </div>
 
-        <!-- Container 2: Video Player & Consolidated Controls Workspace -->
+        <!-- Container 2: Video Player Workspace -->
         <div class="floating-container" id="box-video-player">
             <div class="container-header" data-target="box-video-player">
                 <span class="container-title">Video Workspace & Trim</span>
@@ -366,7 +367,6 @@
                     <span class="compliance-badge" id="maeComplianceToggle" title="Tap to Cycle MAE-B Button Size Upgrades">MAE-B Standard (Tap to Scale)</span>
                 </div>
 
-                <!-- Consolidated Toolbar: 1/3 Change Video button + Start/End triggers -->
                 <div class="video-toolbar">
                     <div class="file-upload-wrapper">
                         <button class="mae-btn mae-btn-secondary" id="selectButton" style="width: 100%; font-size: 0.85rem;">Change</button>
@@ -418,7 +418,7 @@
         let endTime = 0;
         let versions = [];
         let zoomLevels = { 'box-version-stack': 1, 'box-video-player': 1, 'box-actions': 1 };
-        let maeLevel = 0; // 0: Standard, 1: Level 1 Upgrade, 2: Level 2 Upgrade
+        let maeLevel = 0;
 
         const defaultPositions = {
             'box-version-stack': { top: '10px', left: '10px', width: '320px', height: '420px' },
@@ -427,6 +427,7 @@
         };
 
         function loadSavedLayout() {
+            if (window.innerWidth < 1024) return;
             const saved = localStorage.getItem('fig60_layout');
             if (saved) {
                 try {
@@ -445,6 +446,7 @@
         }
 
         function saveLayout() {
+            if (window.innerWidth < 1024) return;
             const pos = {};
             document.querySelectorAll('.floating-container').forEach(el => {
                 pos[el.id] = { top: el.style.top, left: el.style.left, width: el.style.width, height: el.style.height };
@@ -468,13 +470,14 @@
         }
         resetLayoutBtn.addEventListener('click', resetLayout);
 
-        // Free-Floating Desktop Dragging (Unrestricted top/bottom movement)
-        document.querySelectorAll('.container-header').forEach(header => {
-            const containerId = header.getAttribute('data-target');
-            const container = document.getElementById(containerId);
+        // Free-Floating Desktop Dragging
+        document.querySelectorAll('.floating-container').forEach(container => {
+            const header = container.querySelector('.container-header');
 
             header.addEventListener('pointerdown', (e) => {
-                if (e.target.closest('.icon-btn')) return;
+                if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+                if (window.innerWidth < 1024) return; // Strict lock on mobile
+
                 e.preventDefault();
                 container.classList.add('focused');
 
@@ -487,7 +490,7 @@
                     let newX = pe.clientX - canvasRect.left - offsetX;
                     let newY = pe.clientY - canvasRect.top - offsetY;
                     container.style.left = `${Math.max(0, newX)}px`;
-                    container.style.top = `${Math.max(-50, newY)}px`; // Allows moving all the way to the top
+                    container.style.top = `${Math.max(-50, newY)}px`;
                 }
 
                 function onPointerUp() {
@@ -502,7 +505,7 @@
             });
         });
 
-        // Container Zoom & Focus
+        // Universal Zoom (Buttons + Mouse Wheel)
         document.querySelectorAll('.floating-container').forEach(container => {
             const id = container.id;
             const zoomIn = container.querySelector('.zoom-in-btn');
@@ -511,17 +514,23 @@
             container.addEventListener('mouseenter', () => container.classList.add('focused'));
             container.addEventListener('mouseleave', () => container.classList.remove('focused'));
 
-            zoomIn.addEventListener('click', () => {
-                zoomLevels[id] = Math.min(zoomLevels[id] + 0.1, 1.5);
+            function applyZoom(delta) {
+                zoomLevels[id] = Math.min(Math.max(zoomLevels[id] + delta, 0.75), 1.5);
                 container.style.transform = `scale(${zoomLevels[id]})`;
-            });
-            zoomOut.addEventListener('click', () => {
-                zoomLevels[id] = Math.max(zoomLevels[id] - 0.1, 0.75);
-                container.style.transform = `scale(${zoomLevels[id]})`;
-            });
+            }
+
+            zoomIn.addEventListener('click', (e) => { e.stopPropagation(); applyZoom(0.1); });
+            zoomOut.addEventListener('click', (e) => { e.stopPropagation(); applyZoom(-0.1); });
+
+            // Mouse wheel zoom support across container header
+            container.querySelector('.container-header').addEventListener('wheel', (e) => {
+                if (window.innerWidth < 1024) return;
+                e.preventDefault();
+                applyZoom(e.deltaY < 0 ? 0.05 : -0.05);
+            }, { passive: false });
         });
 
-        // MAE-B Two-Upgrade Scaling Toggle
+        // MAE-B Two-Tier Scaling Toggle
         maeComplianceToggle.addEventListener('click', () => {
             maeLevel = (maeLevel + 1) % 3;
             document.body.classList.remove('mae-b-level-1', 'mae-b-level-2');
@@ -536,7 +545,7 @@
             }
         });
 
-        // High-Contrast Sample Video Sandbox
+        // Sample Clip Loader
         sampleClipBtn.addEventListener('click', () => {
             const sampleURL = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
             initVideo(sampleURL, "Sample High-Contrast Clip");
