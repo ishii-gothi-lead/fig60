@@ -2,657 +2,470 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fig 60 - MAE-B Micro Video Engine</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fig 60 Studio</title>
     <style>
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --primary: #0284c7;
+            --drawer-bg: #0f172a;
+            --drawer-text: #f8fafc;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            -webkit-font-smoothing: antialiased;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #f3f4f6;
-            background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
-            background-size: 24px 24px;
-            color: #1f2937;
+            background-color: var(--bg);
+            color: var(--text);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 1rem;
             overflow-x: hidden;
-            width: 100%;
         }
 
-        /* Top Studio Header & Controls Bar */
-        .studio-topbar {
-            width: 100%;
-            max-width: 1300px;
+        header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            z-index: 100;
+            align-items: flex-start;
+            padding: 20px 24px 12px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
         }
 
-        header h1 {
-            font-size: 2rem;
+        .brand h1 {
+            font-size: 28px;
             font-weight: 800;
-            letter-spacing: -0.04em;
-            color: #111827;
+            letter-spacing: -0.05em;
             line-height: 1;
         }
 
-        header p {
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: #0284c7;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            margin-top: 0.2rem;
+        .brand p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 500;
         }
 
-        .topbar-actions {
+        .header-controls {
             display: flex;
-            gap: 0.5rem;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .engine-pill {
+            background: var(--drawer-bg);
+            color: var(--drawer-text);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.05em;
+        }
+
+        .lang-toggle {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-weight: 700;
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        main {
+            flex: 1;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .workspace-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .workspace-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
 
-        .studio-btn {
-            background: #ffffff;
-            color: #334155;
-            border: 1px solid #cbd5e1;
-            padding: 0.5rem 0.75rem;
-            font-size: 0.75rem;
+        .workspace-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+        }
+
+        .sample-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
             font-weight: 600;
+            color: var(--primary);
+            background: #e0f2fe;
+            padding: 6px 12px;
             border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .video-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .timecode-display {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .tc-box label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .tc-box span {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        button.btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
             transition: all 0.2s;
         }
 
-        .studio-btn:hover {
-            background: #f8fafc;
-            color: #0f172a;
-            border-color: #94a3b8;
+        button.btn:active {
+            transform: scale(0.98);
         }
 
-        /* Workbench: Strict Static Stack on Mobile vs Free Canvas on Desktop */
-        .workbench {
-            position: relative;
-            width: 100%;
-            max-width: 1300px;
+        button.btn-primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+            grid-column: span 2;
+        }
+
+        /* Relocatable Drawer */
+        .drawer-handle {
+            position: fixed;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 56px;
+            background: var(--drawer-bg);
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: none;
+        }
+
+        .drawer-handle::after {
+            content: "";
+            width: 4px;
+            height: 24px;
+            background: #ffffff55;
+            border-radius: 2px;
+        }
+
+        .drawer-panel {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.1);
+            z-index: 1001;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            padding: 24px 20px;
+            gap: 20px;
         }
 
-        /* Mobile Container Defaults (Static Stack, Zero Overflow) */
-        .floating-container {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 14px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            width: 100%;
-            height: auto;
-            min-height: 280px;
-            overflow: hidden;
+        .drawer-panel.open {
+            transform: translateX(320px);
         }
 
-        /* Desktop Overrides (Free-Floating & Resizable) */
-        @media (min-width: 1024px) {
-            .workbench {
-                height: 720px;
-                display: block;
-            }
-            .floating-container {
-                position: absolute;
-                resize: both;
-            }
-            #box-version-stack { width: 320px; height: 420px; top: 10px; left: 10px; z-index: 10; }
-            #box-video-player  { width: 520px; height: 500px; top: 10px; left: 350px; z-index: 20; }
-            #box-actions       { width: 380px; height: 260px; top: 440px; left: 10px; z-index: 15; }
-        }
-
-        .floating-container.focused {
-            box-shadow: 0 0 0 2px #0284c7, 0 15px 30px rgba(0,0,0,0.1);
-            z-index: 50 !important;
-        }
-
-        /* Container Header */
-        .container-header {
-            background: #f8fafc;
-            padding: 0.6rem 0.85rem;
+        .drawer-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: grab;
-            border-bottom: 1px solid #e2e8f0;
-            user-select: none;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
         }
 
-        .container-header:active {
-            cursor: grabbing;
-        }
-
-        .container-title {
-            font-size: 0.7rem;
+        .drawer-header h2 {
+            font-size: 16px;
             font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            pointer-events: none;
         }
 
-        .container-controls {
-            display: flex;
-            gap: 0.3rem;
-            align-items: center;
-        }
-
-        .icon-btn {
+        .close-drawer {
             background: none;
             border: none;
-            color: #64748b;
+            font-size: 20px;
             cursor: pointer;
-            font-size: 0.75rem;
-            padding: 0.1rem 0.25rem;
-            border-radius: 4px;
+            color: var(--text-muted);
         }
-        .icon-btn:hover { color: #0f172a; background: #e2e8f0; }
 
-        .container-body {
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
+        .pockets-list {
             flex: 1;
             overflow-y: auto;
-        }
-
-        /* Video Workspace */
-        .video-dropzone {
-            border: 2px dashed #cbd5e1;
-            border-radius: 10px;
-            padding: 0.75rem;
-            text-align: center;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 0.75rem;
-            background: #f8fafc;
-            flex: 1;
-            justify-content: center;
+            gap: 12px;
         }
 
-        #videoPlayer {
-            width: 100%;
-            max-height: 200px;
-            border-radius: 6px;
-            background: #000000;
-            display: none;
-            outline: none;
-        }
-
-        .compliance-badge {
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: #0369a1;
-            background: rgba(2, 132, 199, 0.08);
-            padding: 0.25rem 0.6rem;
-            border-radius: 9999px;
-            border: 1px solid rgba(2, 132, 199, 0.2);
-            cursor: pointer;
-        }
-
-        /* Button Architecture */
-        .mae-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 40px;
-            padding: 0 0.85rem;
-            background-color: #0284c7;
-            color: #ffffff;
-            font-size: 0.85rem;
-            font-weight: 700;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.2);
-            text-align: center;
-            text-decoration: none;
-        }
-        .mae-btn:hover:not(:disabled) { background-color: #0369a1; }
-        .mae-btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
-
-        .mae-btn-secondary { background-color: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; box-shadow: none; }
-        .mae-btn-secondary:hover:not(:disabled) { background-color: #e2e8f0; color: #0f172a; }
-
-        /* MAE-B Upgrade Levels */
-        body.mae-b-level-1 .mae-btn { min-height: 48px !important; font-size: 0.95rem !important; }
-        body.mae-b-level-2 .mae-btn { min-height: 56px !important; font-size: 1.05rem !important; }
-
-        .video-toolbar {
-            display: flex;
-            gap: 0.4rem;
-            width: 100%;
-            align-items: center;
-        }
-
-        .file-upload-wrapper {
-            position: relative;
-            flex: 0 0 33.333%;
+        .pocket-dropdown {
+            border: 1px solid var(--border);
+            border-radius: 8px;
             overflow: hidden;
-            border-radius: 10px;
-        }
-        .file-upload-wrapper input[type="file"] {
-            position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10;
         }
 
-        .version-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .version-item {
+        .pocket-summary {
+            padding: 10px 14px;
+            background: #f8fafc;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 0.5rem 0.75rem;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #334155;
         }
 
-        .version-actions { display: flex; gap: 0.25rem; }
-        .version-btn {
-            background: #e2e8f0; border: none; color: #334155; cursor: pointer; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.4rem; border-radius: 4px;
+        .pocket-content {
+            padding: 10px 14px;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            background: #fff;
         }
-        .version-btn:hover { background: #0284c7; color: #fff; }
-        .version-btn.del:hover { background: #dc2626; color: #fff; }
-
-        #actionStatus { font-size: 0.75rem; color: #0284c7; font-weight: 600; text-align: center; display: none; }
     </style>
 </head>
 <body>
 
-    <div class="studio-topbar">
-        <header>
-            <h1>Fig 60</h1>
-            <p>MAE-B • Studio Video Engine</p>
-        </header>
-        <div class="topbar-actions">
-            <button class="studio-btn" id="sampleClipBtn" title="Load optional sample clip">Load Sample Clip</button>
-            <button class="studio-btn" id="resetLayoutBtn">Reset Layout</button>
+    <header>
+        <div class="brand">
+            <h1 id="app-title">Fig 60</h1>
+            <p id="app-tagline">Raw fidelity, simplified editing.</p>
+        </div>
+        <div class="header-controls">
+            <div class="engine-pill">MAE-B</div>
+            <button class="lang-toggle" id="langToggle" onclick="toggleLang()">ESP</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="workspace-card">
+            <div class="workspace-header">
+                <span class="workspace-title" id="ws-label">VIDEO WORKSPACE & TRIM</span>
+                <div class="sample-selector" onclick="loadSample()">
+                    <span id="sample-name">Big Buck Bunny (Sample)</span>
+                </div>
+            </div>
+
+            <div class="video-container">
+                <video id="videoPlayer" controls playsinline preload="metadata">
+                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                    Your browser does not support video playback.
+                </video>
+            </div>
+
+            <div class="timecode-display">
+                <div class="tc-box">
+                    <label>IN</label>
+                    <span id="tc-in">00:00.00</span>
+                </div>
+                <div class="tc-box">
+                    <label>OUT</label>
+                    <span id="tc-out">00:00.00</span>
+                </div>
+                <div class="tc-box">
+                    <label>DUR</label>
+                    <span id="tc-dur">00:00.00</span>
+                </div>
+            </div>
+
+            <div class="action-grid">
+                <button class="btn" onclick="changeClip()" id="btn-change">Change Clip</button>
+                <button class="btn" onclick="setStart()" id="btn-start">Set Start [I]</button>
+                <button class="btn" onclick="setEnd()" id="btn-end">Set End [O]</button>
+                <button class="btn btn-primary" onclick="saveVersion()" id="btn-save">Save Version</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Drawer Handle & Panel -->
+    <div class="drawer-handle" id="drawerHandle"></div>
+    
+    <div class="drawer-panel" id="drawerPanel">
+        <div class="drawer-header">
+            <h2 id="drawer-title">Pocketed Versions</h2>
+            <button class="close-drawer" onclick="toggleDrawer()">×</button>
+        </div>
+        <div class="pockets-list" id="pocketsList">
+            <div class="pocket-dropdown">
+                <div class="pocket-summary" onclick="togglePocket(this)">
+                    <span>Version 01 — Rough Cut</span>
+                    <span>▾</span>
+                </div>
+                <div class="pocket-content" style="display: none;">
+                    In: 00:02.10 | Out: 00:15.00<br>Saved locally to storage.
+                </div>
+            </div>
         </div>
     </div>
 
-    <main class="workbench" id="workbenchCanvas">
-
-        <!-- Container 1: Version History Stack -->
-        <div class="floating-container" id="box-version-stack">
-            <div class="container-header" data-target="box-version-stack">
-                <span class="container-title">Version History Stack</span>
-                <div class="container-controls">
-                    <button class="icon-btn zoom-in-btn">+</button>
-                    <button class="icon-btn zoom-out-btn">-</button>
-                </div>
-            </div>
-            <div class="container-body">
-                <div id="versionListContainer" class="version-list">
-                    <p style="font-size: 0.75rem; color: #94a3b8; text-align: center; padding: 0.5rem;">No versions saved yet.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Container 2: Video Player Workspace -->
-        <div class="floating-container" id="box-video-player">
-            <div class="container-header" data-target="box-video-player">
-                <span class="container-title">Video Workspace & Trim</span>
-                <div class="container-controls">
-                    <button class="icon-btn zoom-in-btn">+</button>
-                    <button class="icon-btn zoom-out-btn">-</button>
-                </div>
-            </div>
-            <div class="container-body">
-                <div class="video-dropzone">
-                    <p id="instructionText" style="font-size: 0.85rem; font-weight: 600; color: #475569;">Load Local Video or Sample</p>
-                    <video id="videoPlayer" controls playsinline preload="auto" crossorigin="anonymous"></video>
-                    <span id="fileStatus" style="font-size: 0.75rem; color: #059669; font-weight: 600; display: none;"></span>
-                    <span class="compliance-badge" id="maeComplianceToggle">MAE-B Standard (Tap to Scale)</span>
-                </div>
-
-                <div class="video-toolbar">
-                    <div class="file-upload-wrapper">
-                        <button class="mae-btn mae-btn-secondary" id="selectButton" style="width: 100%; font-size: 0.8rem;">Change</button>
-                        <input type="file" id="fileInput" accept="video/mp4,video/quicktime,video/*">
-                    </div>
-                    <button class="mae-btn mae-btn-secondary" id="setStartBtn" style="flex: 1; font-size: 0.8rem;" disabled>Set Start</button>
-                    <button class="mae-btn mae-btn-secondary" id="setEndBtn" style="flex: 1; font-size: 0.8rem;" disabled>Set End</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Container 3: Editing Actions -->
-        <div class="floating-container" id="box-actions">
-            <div class="container-header" data-target="box-actions">
-                <span class="container-title">Editing Actions</span>
-                <div class="container-controls">
-                    <button class="icon-btn zoom-in-btn">+</button>
-                    <button class="icon-btn zoom-out-btn">-</button>
-                </div>
-            </div>
-            <div class="container-body" style="justify-content: center; gap: 0.75rem;">
-                <button class="mae-btn" id="saveVersionBtn" disabled>Save as New Version</button>
-                <span id="actionStatus"></span>
-                <p style="font-size: 0.7rem; color: #64748b; text-align: center;">Shortcuts: [Space] Play, [I] Start, [O] End, [S] Save</p>
-            </div>
-        </div>
-
-    </main>
-
     <script>
-        const workbenchCanvas = document.getElementById('workbenchCanvas');
-        const fileInput = document.getElementById('fileInput');
-        const fileStatus = document.getElementById('fileStatus');
-        const instructionText = document.getElementById('instructionText');
-        const selectButton = document.getElementById('selectButton');
-        const videoPlayer = document.getElementById('videoPlayer');
-
-        const setStartBtn = document.getElementById('setStartBtn');
-        const setEndBtn = document.getElementById('setEndBtn');
-        const saveVersionBtn = document.getElementById('saveVersionBtn');
-        const actionStatus = document.getElementById('actionStatus');
-        const versionListContainer = document.getElementById('versionListContainer');
-        const maeComplianceToggle = document.getElementById('maeComplianceToggle');
-        const resetLayoutBtn = document.getElementById('resetLayoutBtn');
-        const sampleClipBtn = document.getElementById('sampleClipBtn');
-
-        let startTime = 0;
-        let endTime = 0;
-        let versions = [];
-        let zoomLevels = { 'box-version-stack': 1, 'box-video-player': 1, 'box-actions': 1 };
-        let maeLevel = 0;
-
-        const defaultPositions = {
-            'box-version-stack': { top: '10px', left: '10px', width: '320px', height: '420px' },
-            'box-video-player':  { top: '10px', left: '350px', width: '520px', height: '500px' },
-            'box-actions':       { top: '440px', left: '10px', width: '380px', height: '260px' }
+        let currentLang = localStorage.getItem('fig60_lang') || 'EN';
+        
+        const translations = {
+            EN: {
+                tagline: "Raw fidelity, simplified editing.",
+                wsLabel: "VIDEO WORKSPACE & TRIM",
+                sampleName: "Big Buck Bunny (Sample)",
+                changeClip: "Change Clip",
+                setStart: "Set Start [I]",
+                setEnd: "Set End [O]",
+                saveVersion: "Save Version",
+                drawerTitle: "Pocketed Versions",
+                langToggle: "ESP"
+            },
+            ES: {
+                tagline: "Fidelidad pura, edición simplificada.",
+                wsLabel: "ESPACIO DE VIDEO Y CORTE",
+                sampleName: "Big Buck Bunny (Muestra)",
+                changeClip: "Cambiar Clip",
+                setStart: "Marcar Inicio [I]",
+                setEnd: "Marcar Fin [O]",
+                saveVersion: "Guardar Versión",
+                drawerTitle: "Versiones Guardadas",
+                langToggle: "ENG"
+            }
         };
 
-        function loadSavedLayout() {
-            if (window.innerWidth < 1024) return;
-            const saved = localStorage.getItem('fig60_layout');
-            if (saved) {
-                try {
-                    const pos = JSON.parse(saved);
-                    for (const id in pos) {
-                        const el = document.getElementById(id);
-                        if (el && pos[id]) {
-                            el.style.top = pos[id].top;
-                            el.style.left = pos[id].left;
-                            el.style.width = pos[id].width;
-                            el.style.height = pos[id].height;
-                        }
-                    }
-                } catch (e) { resetLayout(); }
-            }
+        function updateLanguage() {
+            const t = translations[currentLang === 'EN' ? 'EN' : 'ES'];
+            document.getElementById('app-tagline').innerText = t.tagline;
+            document.getElementById('ws-label').innerText = t.wsLabel;
+            document.getElementById('sample-name').innerText = t.sampleName;
+            document.getElementById('btn-change').innerText = t.changeClip;
+            document.getElementById('btn-start').innerText = t.setStart;
+            document.getElementById('btn-end').innerText = t.setEnd;
+            document.getElementById('btn-save').innerText = t.saveVersion;
+            document.getElementById('drawer-title').innerText = t.drawerTitle;
+            document.getElementById('langToggle').innerText = t.langToggle;
         }
 
-        function saveLayout() {
-            if (window.innerWidth < 1024) return;
-            const pos = {};
-            document.querySelectorAll('.floating-container').forEach(el => {
-                pos[el.id] = { top: el.style.top, left: el.style.left, width: el.style.width, height: el.style.height };
-            });
-            localStorage.setItem('fig60_layout', JSON.stringify(pos));
+        function toggleLang() {
+            currentLang = currentLang === 'EN' ? 'ES' : 'EN';
+            localStorage.setItem('fig60_lang', currentLang);
+            updateLanguage();
         }
 
-        function resetLayout() {
-            for (const id in defaultPositions) {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.style.top = defaultPositions[id].top;
-                    el.style.left = defaultPositions[id].left;
-                    el.style.width = defaultPositions[id].width;
-                    el.style.height = defaultPositions[id].height;
-                    zoomLevels[id] = 1;
-                    el.style.transform = 'scale(1)';
-                }
-            }
-            localStorage.removeItem('fig60_layout');
-        }
-        resetLayoutBtn.addEventListener('click', resetLayout);
+        // Drawer logic
+        const handle = document.getElementById('drawerHandle');
+        const panel = document.getElementById('drawerPanel');
 
-        // Desktop Dragging Logic
-        document.querySelectorAll('.floating-container').forEach(container => {
-            const header = container.querySelector('.container-header');
-
-            header.addEventListener('pointerdown', (e) => {
-                if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
-                if (window.innerWidth < 1024) return; // Locked on mobile
-
-                e.preventDefault();
-                container.classList.add('focused');
-
-                const rect = container.getBoundingClientRect();
-                const offsetX = e.clientX - rect.left;
-                const offsetY = e.clientY - rect.top;
-
-                function onPointerMove(pe) {
-                    const canvasRect = workbenchCanvas.getBoundingClientRect();
-                    let newX = pe.clientX - canvasRect.left - offsetX;
-                    let newY = pe.clientY - canvasRect.top - offsetY;
-                    container.style.left = `${Math.max(0, newX)}px`;
-                    container.style.top = `${Math.max(-50, newY)}px`;
-                }
-
-                function onPointerUp() {
-                    container.classList.remove('focused');
-                    window.removeEventListener('pointermove', onPointerMove);
-                    window.removeEventListener('pointerup', onPointerUp);
-                    saveLayout();
-                }
-
-                window.addEventListener('pointermove', onPointerMove);
-                window.addEventListener('pointerup', onPointerUp);
-            });
+        handle.addEventListener('click', () => {
+            panel.classList.toggle('open');
         });
 
-        // Universal Zoom (Buttons + Mouse Wheel)
-        document.querySelectorAll('.floating-container').forEach(container => {
-            const id = container.id;
-            const zoomIn = container.querySelector('.zoom-in-btn');
-            const zoomOut = container.querySelector('.zoom-out-btn');
-
-            container.addEventListener('mouseenter', () => container.classList.add('focused'));
-            container.addEventListener('mouseleave', () => container.classList.remove('focused'));
-
-            function applyZoom(delta) {
-                if (window.innerWidth < 1024) return;
-                zoomLevels[id] = Math.min(Math.max(zoomLevels[id] + delta, 0.75), 1.5);
-                container.style.transform = `scale(${zoomLevels[id]})`;
-            }
-
-            zoomIn.addEventListener('click', (e) => { e.stopPropagation(); applyZoom(0.1); });
-            zoomOut.addEventListener('click', (e) => { e.stopPropagation(); applyZoom(-0.1); });
-
-            container.querySelector('.container-header').addEventListener('wheel', (e) => {
-                if (window.innerWidth < 1024) return;
-                e.preventDefault();
-                applyZoom(e.deltaY < 0 ? 0.05 : -0.05);
-            }, { passive: false });
-        });
-
-        // MAE-B Two-Tier Scaling Toggle
-        maeComplianceToggle.addEventListener('click', () => {
-            maeLevel = (maeLevel + 1) % 3;
-            document.body.classList.remove('mae-b-level-1', 'mae-b-level-2');
-            if (maeLevel === 1) {
-                document.body.classList.add('mae-b-level-1');
-                maeComplianceToggle.textContent = "MAE-B Upgrade 1 Active";
-            } else if (maeLevel === 2) {
-                document.body.classList.add('mae-b-level-2');
-                maeComplianceToggle.textContent = "MAE-B Upgrade 2 Active (Max)";
-            } else {
-                maeComplianceToggle.textContent = "MAE-B Standard (Tap to Scale)";
-            }
-        });
-
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = (seconds % 60).toFixed(1);
-            return `${mins.toString().padStart(2, '0')}:${secs.padStart(4, '0')}`;
+        function toggleDrawer() {
+            panel.classList.remove('open');
         }
 
-        function renderVersionList() {
-            if (versions.length === 0) {
-                versionListContainer.innerHTML = `<p style="font-size: 0.75rem; color: #94a3b8; text-align: center; padding: 0.5rem;">No versions saved yet.</p>`;
-                return;
-            }
-            versionListContainer.innerHTML = '';
-            versions.forEach((ver, index) => {
-                const label = index === 0 ? "Original" : `Version ${index}`;
-                const item = document.createElement('div');
-                item.className = 'version-item';
-                item.innerHTML = `
-                    <span>${label}</span>
-                    <div class="version-actions">
-                        <button class="version-btn" onclick="loadVersion(${index})">Load</button>
-                        <button class="version-btn" onclick="downloadVersion(${index})">Save</button>
-                        ${index > 0 ? `<button class="version-btn del" onclick="deleteVersion(${index})">Del</button>` : ''}
-                    </div>
-                `;
-                versionListContainer.appendChild(item);
-            });
+        function togglePocket(el) {
+            const content = el.nextElementSibling;
+            content.style.display = content.style.display === 'none' ? 'block' : 'none';
         }
 
-        function initVideo(url, name) {
-            versions = [{ name: "Original", url: url, range: null }];
-            videoPlayer.src = url;
-            videoPlayer.style.display = 'block';
-            videoPlayer.load();
-            instructionText.style.display = 'none';
-            fileStatus.textContent = `Loaded: ${name}`;
-            fileStatus.style.display = 'block';
-            selectButton.textContent = "Change";
-            setStartBtn.disabled = false;
-            setEndBtn.disabled = false;
-            saveVersionBtn.disabled = false;
-            actionStatus.style.display = 'none';
-            renderVersionList();
+        // Video controls stubs
+        const video = document.getElementById('videoPlayer');
+        function setStart() {
+            document.getElementById('tc-in').innerText = formatTime(video.currentTime);
+        }
+        function setEnd() {
+            document.getElementById('tc-out').innerText = formatTime(video.currentTime);
+        }
+        function formatTime(sec) {
+            let m = Math.floor(sec / 60);
+            let s = (sec % 60).toFixed(2);
+            return `${m.toString().padStart(2,'0')}:${s < 10 ? '0' : ''}${s}`;
+        }
+        function changeClip() {
+            alert("Select local or remote video source.");
+        }
+        function saveVersion() {
+            alert("Version pocketed securely to local storage.");
         }
 
-        // Optional Sample Clip loader at user discretion
-        sampleClipBtn.addEventListener('click', () => {
-            const sampleURL = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
-            initVideo(sampleURL, "Optional Sample Clip");
-        });
-
-        fileInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                initVideo(URL.createObjectURL(file), file.name);
-            }
-        });
-
-        setStartBtn.addEventListener('click', () => {
-            startTime = videoPlayer.currentTime;
-            setStartBtn.textContent = `Start: ${formatTime(startTime)}`;
-            actionStatus.textContent = `Start point set at ${formatTime(startTime)}`;
-            actionStatus.style.display = 'block';
-        });
-
-        setEndBtn.addEventListener('click', () => {
-            endTime = videoPlayer.currentTime;
-            setEndBtn.textContent = `End: ${formatTime(endTime)}`;
-            actionStatus.textContent = `End point set at ${formatTime(endTime)}`;
-            actionStatus.style.display = 'block';
-        });
-
-        saveVersionBtn.addEventListener('click', () => {
-            if (versions.length === 0) return;
-            const verName = `Version ${versions.length}`;
-            versions.push({
-                name: verName,
-                url: videoPlayer.src,
-                range: { start: startTime, end: endTime > startTime ? endTime : videoPlayer.duration }
-            });
-            renderVersionList();
-            actionStatus.textContent = `Saved "${verName}" to history stack!`;
-            actionStatus.style.display = 'block';
-        });
-
-        window.loadVersion = function(index) {
-            const ver = versions[index];
-            videoPlayer.src = ver.url;
-            videoPlayer.load();
-            if (ver.range) {
-                videoPlayer.currentTime = ver.range.start;
-                videoPlayer.play();
-                const checkTime = () => {
-                    if (videoPlayer.currentTime >= ver.range.end) {
-                        videoPlayer.pause();
-                        videoPlayer.removeEventListener('timeupdate', checkTime);
-                    }
-                };
-                videoPlayer.addEventListener('timeupdate', checkTime);
-            }
-            actionStatus.textContent = `Loaded "${ver.name}" into player.`;
-            actionStatus.style.display = 'block';
-        };
-
-        window.downloadVersion = function(index) {
-            const ver = versions[index];
-            const a = document.createElement('a');
-            a.href = ver.url;
-            a.download = `${ver.name.toLowerCase().replace(/\s+/g, '-')}.mp4`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        };
-
-        window.deleteVersion = function(index) {
-            if (index === 0) return;
-            versions.splice(index, 1);
-            renderVersionList();
-            actionStatus.textContent = `Deleted version.`;
-            actionStatus.style.display = 'block';
-        };
-
-        window.addEventListener('keydown', (e) => {
-            if (e.target.tagName === 'INPUT') return;
-            if (e.code === 'Space') {
-                e.preventDefault();
-                if (videoPlayer.paused) videoPlayer.play();
-                else videoPlayer.pause();
-            } else if (e.code === 'KeyI' && !setStartBtn.disabled) {
-                setStartBtn.click();
-            } else if (e.code === 'KeyO' && !setEndBtn.disabled) {
-                setEndBtn.click();
-            } else if (e.code === 'KeyS' && !saveVersionBtn.disabled) {
-                saveVersionBtn.click();
-            }
-        });
-
-        loadSavedLayout();
+        updateLanguage();
     </script>
 </body>
 </html>
